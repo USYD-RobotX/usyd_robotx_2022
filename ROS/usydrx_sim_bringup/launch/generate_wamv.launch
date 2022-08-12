@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node name="generate_wamv" pkg="usydrx_sim_bringup" type="generate_wamv.sh" output="screen" required="true"/>
+    
+    
+    
+
+
+</launch>

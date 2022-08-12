@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find vrx_gazebo)/launch/sydneyregatta.launch">
+        <arg name="urdf" value="$(find usydrx_sim_bringup)/urdf/usyd_vrx_wamv.urdf"/>
+        <arg name="camera_enabled"       value="true" />
+        <arg name="gps_enabled"          value="true" />
+        <arg name="imu_enabled"          value="true" />
+        <arg name="lidar_enabled"        value="true" />
+
+        <remap from="/wamv/joint_states" to="/wamv/joint_states2"/>
+    </include>
+
+
+    <node ns="wamv" name="joint_states_relay" pkg="topic_tools" type="relay" args="joint_states joint_states_remaped"/>
+
+
+    <node ns="wamv" pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" output="screen">
+        <param name="gui" value="false" />
+        <param name="rate" value="30" />
+        <rosparam param="source_list">['/wamv/joint_states_remaped']</rosparam> 
+
+        <remap from="joint_states" to="joint_states_imu_gps"/>
+    </node>
+
+    <node ns="wamv" pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub">
+        <remap from="joint_states" to="joint_states_imu_gps"/>
+    </node>
+
+  <!-- Publishes revolute joint static transforms (gps and imu) to /tf -->
+    
+
+    <include file="$(find usydrx_sim_bringup)/launch/localisation.launch"/>
+
+    <include file="$(find usydrx_sim_bringup)/launch/rviz_vrx.launch"/>
+
+
+    <!-- <include file="$(find usyd_vrx_control)/launch/control.launch"/>
+
+
+    <include file="$(find usyd_vrx_navigation)/launch/scanAndMap.launch"/>
+
+    <include file="$(find usyd_vrx_navigation)/launch/object_server.launch"/> -->
+</launch>

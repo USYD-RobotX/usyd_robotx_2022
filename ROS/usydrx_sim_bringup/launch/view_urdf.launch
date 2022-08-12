@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+    <param name="robot_description" command="$(find xacro)/xacro &#x002D;&#x002D;inorder '$(find usydrx_sim_bringup)/urdf/usyd_vrx_wamv.urdf'"/>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub"/>
+
+    <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+    </node>
+
+    <arg name="rviz_config" default="$(find usydrx_sim_bringup)/config/rviz_visualisation_vrx.rviz"/>
+    <node pkg="rviz" type="rviz"
+        name="wamv_visualization" args="-d $(arg rviz_config)" required="true"/>
+</launch>

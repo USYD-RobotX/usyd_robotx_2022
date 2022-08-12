@@ -1,0 +1,41 @@
+# wamv_camera:
+#     - name: front_camera
+#       x: 0.75
+#       y: 0
+#       Y: ${radians(0)}
+#       P: ${radians(15)}
+#     - name: right_camera
+#       x: 0.75
+#       y: 0.1
+#       Y: ${radians(40)}
+#       P: ${radians(15)}
+#     - name: left_camera
+#       x: 0.75
+#       y: -0.1
+#       Y: ${radians(-40)}
+#       P: ${radians(15)}
+wamv_gps:
+    - name: gps_wamv
+      x: -0.85
+wamv_imu:
+    - name: imu_wamv
+      y: -0.2
+# lidar:
+#     - name: lidar_wamv_front
+#       type: 16_beam
+#       x: 0.6 
+#       y: 0
+#       z: 1.6
+#     - name: lidar_wamv_back
+#       type: 16_beam
+#       x: -0.85 
+#       y: 0
+#       z: 1.6
+#       Y: ${radians(180)}
+# wamv_ball_shooter:
+#     - name: ball_shooter
+#       x: 0.55 
+#       y: -0.2
+#       z: 1.3
+#       pitch: ${radians(-45)}
+#       yaw: 0
