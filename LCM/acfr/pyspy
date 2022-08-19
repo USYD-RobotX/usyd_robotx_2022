@@ -1,0 +1,378 @@
+#!/usr/bin/env python2
+import lcm
+import sys
+import curses
+import curses.ascii
+import time
+
+try:
+    from cStringIO.StringIO import BytesIO
+except:
+    from io import BytesIO
+
+
+def get_message_types(module_handle):
+
+    fingerprint_mapping = {}
+
+    possible_types = dir(module_handle)
+
+    for ptype_name in possible_types:
+        ptype = getattr(module_handle, ptype_name)
+        if hasattr(ptype, '_packed_fingerprint'):
+            fingerprint_mapping[ptype._get_packed_fingerprint()] = ptype
+
+    return fingerprint_mapping
+
+
+class ChannelStats(object):
+    def __init__(self):
+        self.data_total = 0
+        self.decode_count = 0
+
+        self.last_display_time = 0
+        self.last_data_total = 0
+        self.last_decode_count = 0
+
+        self.cached = None
+
+    def add_packet(self, buf):
+        self.last_time = time.time()
+        self.decode_count += 1
+        self.data_total += len(buf)
+
+    def get_stats(self, time):
+        # TODO: improve this (smooth it out) over the last second or so
+        # instead of the last display interval (which notably should be 1s still)
+
+        interval = float(time - self.last_display_time)
+
+        if interval < 1.0:
+            return self.cached
+
+        decoded = self.decode_count
+        data = self.data_total
+
+        frequency = float(decoded - self.last_decode_count) / interval
+        bandwidth = float(data - self.last_data_total) / interval
+        since_last = time - self.last_time
+
+        # reset for next call in
+        self.last_display_time = time
+        self.last_data_total = data
+        self.last_decode_count = decoded
+
+        self.cached = (bandwidth, frequency, decoded, since_last)
+
+        return self.cached
+
+
+class Channel(object):
+    def __init__(self, channel_name, data_type):
+        self.channel_name = channel_name
+        self.data_type = data_type
+        self.latest = None
+        self.subchannels = {}
+
+        self.cs = ChannelStats()
+
+    def handle_latest(self, raw_data):
+        self.cs.add_packet(raw_data)
+        self.latest = raw_data
+
+    def output_headers(self, message=None):
+        if self.data_type is None:
+            return ["Can't decode",""]
+
+        now = time.time()
+        bandwidth, frequency, decoded, since_last = self.cs.get_stats(now)
+        message = message or self.data_type.decode(self.latest)
+        lines = [
+                self.channel_name + repr(message),
+                "bw {:5.2f}kB/s, f {:5.2f}Hz, decoded {}".format(bandwidth/1024, frequency, decoded)]
+
+        if since_last > 1.0:
+            lines[1] = "{}, {:.0f}s since last".format(lines[1], since_last)
+
+        return lines
+
+
+    def list_attributes(self, lcm_type_set, message=None):
+        if self.data_type is None:
+            return []
+
+        message = message or self.data_type.decode(self.latest)
+        attributes = []
+        # pylcm uses slots to declare the variable elements so we
+        # iterate over them, no need to check anything else
+        for attr in message.__slots__:
+            value = getattr(message, attr)
+            if type(value) in lcm_type_set:
+                # we have a 'subchannel' with an lcm type we know
+                # so split it out and get the attributes.
+                # just indent it a little
+                if not attr in self.subchannels:
+                    self.subchannels[attr] = Channel(attr, type(value))
+
+                attributes.append((attr, repr(value)))
+
+                # get all the subtypes attributes
+                for attr, value in self.subchannels[attr].list_attributes(lcm_type_set, value):
+                    attributes.append(('  ' + attr, '  ' + value))
+                # don't want to append this
+                continue
+            else:
+                try:
+                    if attr == 'data':
+                        value = "Won't display"
+                    else:
+                        if isinstance(value, float):
+                            value = unicode("{:10.6f}".format(value))
+                        elif isinstance(value, tuple) and len(value) > 0 and isinstance(value[0], float):
+                            value = (u",".join(unicode("{:10.6f}".format(v)) for v in value))
+                        else:
+                            value = unicode(value)
+                except UnicodeDecodeError:
+                    line = u""
+                    for v in value:
+                        try:
+                            line += unicode(v)
+                        except UnicodeDecodeError:
+                            line += u"0x{:02X}".format(ord(v))
+		    value = line
+
+            # need to escape this as well, remove non-printable
+            # characters
+            attributes.append((attr, value))
+
+        return attributes
+
+
+class PySpy(object):
+    def __init__(self, lcm_handle, lcm_types):
+        self.lcm_handle = lcm_handle
+        self.lcm_types = lcm_types
+        self.lcm_type_set = set(lcm_types.values())
+        
+        lc.subscribe(".*", self.handle_message)
+
+        self.channels = {}
+
+    def handle_message(self, channel_name, raw_data):
+        # if we haven't seen the channel
+        # attempt detection
+        if channel_name not in self.channels:
+            self.detect_type(channel_name, raw_data)
+
+        self.channels[channel_name].handle_latest(raw_data)
+
+    def detect_type(self, channel_name, raw_data):
+        buf = BytesIO(raw_data)
+
+        fingerprint = buf.read(8)
+
+        if fingerprint in self.lcm_types:
+            data_type = self.lcm_types[fingerprint]
+        else:
+            data_type = None
+        
+        self.channels[channel_name] = Channel(channel_name, data_type)
+
+class Interface(object):
+    def __init__(self, spyinstance):
+        self.col_widths = [29, 29, 19]  # the width of each channel
+        self.col_starts = [0, 30, 60]
+        self.selected_channel = None  # the name of the channel, not index
+        self.last_attr_count = 0
+        self.spyinstance = spyinstance
+        self.quitting = False
+
+        # used for debuggin/messages, basically displays the last 10 rows...
+        self.log = []
+
+    def resize(self):
+        # we expect a min width of 80, can probably handle less
+        self.height, self.width = self.screen.getmaxyx()
+
+        # we have two column separators
+        if self.width > 80:
+            self.col_widths = [29, 29, self.width - 58]
+            self.col_starts = [0, 29, 58]
+        else:
+            # integer rounding, leave an extra column for divider
+            fixed_width = self.width / 3
+            self.col_widths = [fixed_width, fixed_width, self.width - 2 * fixed_width]
+            self.col_starts = [0, fixed_width, 2 * fixed_width]
+
+    def __call__(self, screen):
+        self.screen = screen
+        self.resize()
+
+        self.screen.nodelay(1)
+
+        self.quitting = False
+        self.next_render = time.time() + 0.1
+
+
+        while not self.quitting:
+            timeout = int(100 * (self.next_render - time.time()))
+            try:
+                if timeout > 1:
+                    lc.handle_timeout(timeout)
+            except IOError:
+                break
+
+            if time.time() > self.next_render:
+                self.render()
+                self.next_render += 0.1
+
+            key = self.screen.getch()
+
+            sorted_channels = sorted(self.spyinstance.channels.keys())
+            if key == -1:
+                continue
+
+            elif key == curses.KEY_UP:
+                if self.selected_channel is None:
+                    self.selected_channel = sorted_channels[0]
+                else:
+                    index = sorted_channels.index(self.selected_channel) - 1
+                    self.selected_channel = sorted_channels[index]
+
+            elif key == curses.KEY_DOWN:
+                if self.selected_channel is None:
+                    self.selected_channel = sorted_channels[-1]
+                else:
+                    index = sorted_channels.index(self.selected_channel) + 1
+                    if index >= len(sorted_channels):
+                        index = 0
+                    self.selected_channel = sorted_channels[index]
+
+            elif key == curses.KEY_RESIZE:
+                self.resize()
+
+            elif key == ord('q') or key == ord('Q'):
+                self.quitting = True
+
+    def calculate_top_row_index(self, elements, visible, selected_element):
+        midpoint = visible / 2 + 1
+
+        if selected_element is None:
+            return 0
+
+        return max(0, min(selected_element - midpoint, elements - visible))
+
+    def render(self):
+        spy = self.spyinstance
+
+        if len(spy.channels) > self.height:
+            # we have too many channels
+            # must slide view to show them based on current selected channel
+            if self.selected_channel is None:
+                start_index = 0
+
+        try:
+            idx = sorted(spy.channels.iterkeys()).index(self.selected_channel)
+        except ValueError:
+            idx = None
+
+        starting_index = self.calculate_top_row_index(len(spy.channels), self.height, idx)
+
+        for i, name in enumerate(sorted(spy.channels.iterkeys())):
+            if i < starting_index:
+                continue
+
+            if i - starting_index >= self.height:
+                break
+
+            if name == self.selected_channel:
+                self.screen.addstr(i - starting_index, self.col_starts[0], field(name, self.col_widths[0], True), curses.A_BOLD)
+
+                print_row = 0
+
+                # print the attributes and their values
+                header_lines = spy.channels[name].output_headers()
+                for line in header_lines:
+                    self.screen.addstr(print_row, self.col_starts[1], field(line, self.col_widths[1] + self.col_widths[2]))
+                    print_row += 1
+
+                attrs = spy.channels[name].list_attributes(spy.lcm_type_set)
+                for attr, value in attrs:
+                    self.screen.addstr(print_row, self.col_starts[1], field(attr, self.col_widths[1], True))
+                    try:
+                        self.screen.addstr(print_row, self.col_starts[2], field(value, self.col_widths[2]))
+                    except curses.error as e:
+                        print "Curses Error:", e
+                        
+                    print_row += 1
+                    if print_row >= self.height - 1:
+                        # in case we overflow...
+                        # should make a scrolling window...
+                        break
+
+                for j in xrange(print_row, self.last_attr_count):
+                    self.screen.addstr(j, self.col_starts[1], field("", self.col_widths[1], True))
+                    self.screen.addstr(j, self.col_starts[2], field("", self.col_widths[2]))
+
+                self.last_attr_count = print_row
+
+            else:
+                self.screen.addstr(i - starting_index, self.col_starts[0], field(name, self.col_widths[0], True))
+
+        for i, row in enumerate(self.log[-10:-1]):
+            self.screen.addstr(self.height-10+i, 0, field(name, self.width))
+
+    
+
+def field(string, width, clear_final=False):
+    printable = ""
+    for c in string:
+        try:
+            printable += curses.ascii.unctrl(str(c))
+        except UnicodeEncodeError:
+            printable += c
+
+    if clear_final:
+        return printable.ljust(width)[:width-1] + " "
+    else:
+        return printable.ljust(width)[:width]
+
+def initialise_spy(lc):
+    import acfrlcm
+    import senlcm
+    import bot_core
+    import bot_frames
+    import bot_lcmgl
+    import bot_param
+    import bot_procman
+    import urioce_lcm
+
+    lcm_types = get_message_types(acfrlcm)
+    lcm_types.update(get_message_types(senlcm))
+
+    lcm_types.update(get_message_types(bot_core))
+    lcm_types.update(get_message_types(bot_frames))
+    lcm_types.update(get_message_types(bot_lcmgl))
+    lcm_types.update(get_message_types(bot_param))
+    lcm_types.update(get_message_types(bot_procman))
+    lcm_types.update(get_message_types(urioce_lcm))
+
+
+    spy = PySpy(lc, lcm_types)
+    interface = Interface(spy)
+
+
+    while not interface.quitting:
+        curses.wrapper(interface)
+
+    print "pyspy closing."
+
+
+if __name__ == '__main__':
+    import os
+    # sys.path.insert(0, '/home/auv/git/acfr-lcm/build/lib/python2.7/dist-packages/perls/lcmtypes')
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lcmtypes'))
+
+    lc = lcm.LCM()
+
+    initialise_spy(lc)

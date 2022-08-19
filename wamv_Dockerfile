@@ -49,7 +49,7 @@ RUN echo "$LCM_LIBRARY_DIR/python$PYTHON_VERSION/site-packages" > $PYTHON_USER_S
 
 RUN cd lcm && mkdir build && cd build && cmake .. && make && sudo make install
 
-RUN cd /lcm/lcm-python && python setup.py install
+RUN cd /lcm/lcm-python && python2 setup.py install
 
 # # Installing the LCM tunnel, keyrick and repo. Commands as gotten from Trello
 RUN wget http://www-personal.acfr.usyd.edu.au/lachlan/mirror/acfrmarine-keyring_focal_all.deb \
@@ -58,7 +58,24 @@ RUN dpkg -i acfrmarine-*.deb
 RUN apt-get update && apt install bot2-all -y
 
 
-RUN apt-get update && apt install ros-noetic-pcl-ros libpcap-dev -y
+RUN apt-get update && apt install ros-noetic-pcl-ros libpcap-dev vim -y
+
+RUN mkdir -p /rx_ws/src/usyd_robotx_2022
+
+
+ENV ROS_MASTER_URI=http://172.16.154.230:11311
+
+ENV ROS_HOSTNAME=172.16.154.230
+
+ADD . /rx_ws/src/usyd_robotx_2022
+
+RUN source /opt/ros/noetic/setup.bash && cd /rx_ws && catkin_make
+
+RUN source /rx_ws/devel/setup.bash
+
+RUN chmod +x /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy
+
+RUN ln -s /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy /usr/local/bin/pyspy
 
 
 # # Copy pyspy to docker container
