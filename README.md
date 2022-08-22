@@ -48,6 +48,16 @@ Test using the command `roscore`
 
 If you have started lcm on the wamv (run `cd ~ && start_lcm.sh`) you should be able to see the packets by running `pyspy`
 
+Using a DEVCONTAINER
+====================================
+Open this repository in vscode and you can be prompted to rebuild this inside a devcontainer.
+This will generate a docker conatiner inside your computer and attach this vscode instance to is. You then can code and debug inside vscode.
+
+
+If you are on the wamv network you can access the lcm via:
+`bot-lcm-tunnel 172.16.154.230`
+
+
 
 Useful Commands
 --------------------
@@ -96,3 +106,26 @@ Then Add the topic to RViz by adding a topic.
 Then Ensure to change the base_frame to "rs_lidar"
 
 You should now see the LIDAR on the Screen viewed in RVIZ.
+
+
+Running the WAM-V Docker Container Locally
+=============================================
+
+To run the WAM-V Container locally not much is needed.
+
+Find a workspace ifolder inside your computer and clone the package.
+
+`git clone https://github.com/USYD-RobotX/usyd_robotx_2022.git` 
+
+`cd usyd_robotx_2022`
+
+Build the image and run the container
+
+`docker build -t wamv_image -f wamv_Dockerfile .`
+
+`docker run --network=host -it --name wamv_container wamv_image:latest`
+
+If you are on the WAM-V / AUV network and LCM is running on the system you can acccess the system with the following.
+
+`bot-lcm-tunnel 172.16.154.230`
+

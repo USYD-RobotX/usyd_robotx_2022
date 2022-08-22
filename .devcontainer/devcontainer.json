@@ -1,0 +1,28 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.245.0/containers/python-3
+{
+	"name": "usyd_robotx_2022_devcontainer",
+	"build": {
+		"dockerfile": "Dockerfile",
+
+	},
+
+	"runArgs": [
+		"--network=host",
+	],
+
+	"workspaceMount": "source=${localWorkspaceFolder},target=/rx_ws/src/usyd_robotx_2022,type=bind",
+	"workspaceFolder": "/rx_ws/src/usyd_robotx_2022",
+
+	// Configure tool-specific properties.
+	
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "chmod +x /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy && ln -s /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy /usr/local/bin/pyspy",
+
+	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+
+}
