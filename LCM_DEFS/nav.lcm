@@ -1,0 +1,23 @@
+package acfrlcm;
+
+struct auv_acfr_nav_t
+{
+	int64_t utime;
+
+	double latitude;
+	double longitude;
+	double x;
+	double y;
+	double depth;
+	double roll;
+	double pitch;
+	double heading;
+	double vx;
+	double vy;
+	double vz;
+	double rollRate;
+	double pitchRate;
+	double headingRate;
+	double altutude;
+	double fwd_obstacle_dist;
+}
