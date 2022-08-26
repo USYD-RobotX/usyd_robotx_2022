@@ -1,29 +1,30 @@
 #include "ros/ros.h"
 #include <lcm/lcm-cpp.hpp>
 // include ros message type
-#include "nav.msg"
+//#include "lcm_ros_bridge/nav.h"
 // include lcm message type
 #include "acfrlcm/auv_acfr_nav_t"
 
 class Handler 
 {
     public:
-        Handler(ros::NodeHandle n, ros::Publisher pub);
+        Handler() {};
+        //Handler(ros::NodeHandle n, ros::Publisher pub);
         ~Handler() {};
         void handleMessage(const lcm::ReceiveBuffer* rbuf,
                 const std::string& chan, 
                 const acfrlcm::auv_acfr_nav_t* msg); 
     
     private:
-        ros::NodeHandle _node;
-        ros::Publisher _pub;
+        //ros::NodeHandle _node;
+        //ros::Publisher _pub;
 };
 
-void Handler::Handler(ros::NodeHandle n, ros::Publisher pub)
-    : _node(n), _pub(pub)
-{
-    // nothing else happens
-}
+//void Handler::Handler(ros::NodeHandle n, ros::Publisher pub)
+//    : _node(n), _pub(pub)
+//{
+//    // nothing else happens... for now
+//}
 
 
 void Handler::handleMessage(
@@ -32,7 +33,7 @@ void Handler::handleMessage(
     const acfrlcm::auv_acfr_nav_t* msg) 
 
     {
-
+        std::cout << " Handler was called, Yay" << std::endl;
 
         // still the default value needs to be fixed
         //int i;
@@ -64,11 +65,13 @@ if (!lcm.good()){ return 1; }
 
 ros::init(argc, argv, "NAV_BRIDGE");
 ros::NodeHandle node;
-ros::Publisher nav_pub = node.advertise<LCM-ROSS-NAV::nav>("NAV_B_OUTPUT",1000)
+//ros::Publisher nav_pub = node.advertise<lcm_ros_bridge::nav>("NAV_B_OUTPUT",1000)
 
-Handler handlerObject = new Handler(ros_node, ros_pub_nav);
+Handler handlerObject;
+//Handler handlerObject = new Handler(ros_node, ros_pub_nav);
 lcm.subscribe("WAMV.ACFR_NAV", &Handler::handleMessage, &handlerObject);
 
+while(ros::ok()){}
 // no need to do ros::Rate, sleep or anything like that
 // it will trigger on a message from the LCM
 
