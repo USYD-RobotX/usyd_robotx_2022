@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>LCM_ROS_Bridge</name>
+  <name>lcm_ros_bridge</name>
   <version>0.0.0</version>
-  <description>The LCM_ROS_Bridge package</description>
+  <description>The lcm_ros_bridhe package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="root@todo.todo">root</maintainer>
+  <maintainer email="joeldonnelly281@gmail.com">Joel</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -49,7 +49,8 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
