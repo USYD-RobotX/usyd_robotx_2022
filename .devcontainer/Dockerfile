@@ -62,11 +62,16 @@ RUN apt-get update && apt install ros-noetic-pcl-ros libpcap-dev vim -y
 
 RUN mkdir -p /rx_ws/src/usyd_robotx_2022
 
+RUN echo "source /ros_entrypoint.sh" >> /root/.bashrc
 
-ENV ROS_MASTER_URI=http://172.16.154.230:11311
+RUN echo "[[ -f /rx_ws/devel/setup.bash ]] && source /rx_ws/devel/setup.bash" >> /root/.bashrc
 
-ENV ROS_HOSTNAME=172.16.154.230
+# RUN echo "alias alias_name='/rx_ws/src/LCM/pyspy'" >> /root/.bashrc
 
+
+# ENV ROS_MASTER_URI=http://172.16.154.230:11311
+
+# ENV ROS_HOSTNAME=172.16.154.230
 # ADD . /rx_ws/src/usyd_robotx_2022
 
 # RUN source /opt/ros/noetic/setup.bash && cd /rx_ws && catkin_make
