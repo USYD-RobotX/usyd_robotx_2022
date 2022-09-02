@@ -1,0 +1,11 @@
+<!-- Launch file to launch all the cameras at once -->
+
+<launch>
+    <include file="$(find usydrx_vision)/launch/mono_camera_left.launch">
+    </include>
+    <include file="$(find usydrx_vision)/launch/mono_camera_centre.launch">
+    </include>
+    <include file="$(find usydrx_vision)/launch/mono_camera_right.launch">
+    </include>
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find usydrx_vision)/rviz/camera_viewer.rviz" />
+</launch>
