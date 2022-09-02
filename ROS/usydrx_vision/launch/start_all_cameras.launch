@@ -7,5 +7,5 @@
     </include>
     <include file="$(find usydrx_vision)/launch/mono_camera_right.launch">
     </include>
-    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find usydrx_vision)/rviz/camera_viewer.rviz" />
+    <!-- <node type="rviz" name="rviz" pkg="rviz" args="-d $(find usydrx_vision)/rviz/camera_viewer.rviz" /> -->
 </launch>
