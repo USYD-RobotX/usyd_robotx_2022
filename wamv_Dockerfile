@@ -60,8 +60,14 @@ RUN apt-get update && apt install bot2-all -y
 
 RUN apt-get update && apt install ros-noetic-pcl-ros libpcap-dev vim -y
 
+RUN wget https://downloads.alliedvision.com/Vimba64_v6.0_Linux.tgz && tar -xvf Vimba64_v6.0_Linux.tgz && cd Vimba_6_0/VimbaGigETL && ./Install.sh
+
 RUN mkdir -p /rx_ws/src/usyd_robotx_2022
 
+RUN cd /rx_ws/src && git clone https://github.com/astuff/avt_vimba_camera.git
+
+
+ENV export GENICAM_GENTL64_PATH=$GENICAM_GENTL64_PATH:"/Vimba_6_0/VimbaGigETL/CTI/x86_64bit"
 
 ENV ROS_MASTER_URI=http://172.16.154.230:11311
 
