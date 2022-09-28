@@ -1,7 +1,6 @@
 # Start with default docker image for ROS1 noetic over Ubuntu 20.04 Focal.
 FROM osrf/ros:noetic-desktop-full 
 
-SHELL ["/bin/bash", "-c"] # Specify a bash shell for run commands.
 
 # Install catkin & dependencies:
 RUN apt-get update && apt-get install -y \
@@ -62,9 +61,14 @@ RUN apt-get update && apt install ros-noetic-pcl-ros libpcap-dev vim -y
 
 RUN mkdir -p /rx_ws/src/usyd_robotx_2022
 
-RUN echo "source /ros_entrypoint.sh" >> /root/.bashrc
+# RUN echo "source /ros_entrypoint.sh" >> /root/.bashrc
+
+RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc
+
 
 RUN echo "[[ -f /rx_ws/devel/setup.bash ]] && source /rx_ws/devel/setup.bash" >> /root/.bashrc
+
+# SHELL ["/bin/bash", "-c"] # Specify a bash shell for run commands.
 
 # RUN echo "alias alias_name='/rx_ws/src/LCM/pyspy'" >> /root/.bashrc
 
