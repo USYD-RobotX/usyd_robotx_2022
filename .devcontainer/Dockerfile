@@ -59,12 +59,13 @@ RUN apt-get update && apt install bot2-all -y
 
 RUN apt-get update && apt install ros-noetic-pcl-ros libpcap-dev vim -y
 
+RUN wget https://downloads.alliedvision.com/Vimba64_v6.0_Linux.tgz && tar -xvf Vimba64_v6.0_Linux.tgz && cd Vimba_6_0/VimbaGigETL && ./Install.sh
+
 RUN mkdir -p /rx_ws/src/usyd_robotx_2022
 
 # RUN echo "source /ros_entrypoint.sh" >> /root/.bashrc
 
 RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc
-
 
 RUN echo "[[ -f /rx_ws/devel/setup.bash ]] && source /rx_ws/devel/setup.bash" >> /root/.bashrc
 
@@ -72,7 +73,17 @@ RUN echo "[[ -f /rx_ws/devel/setup.bash ]] && source /rx_ws/devel/setup.bash" >>
 
 # RUN echo "alias alias_name='/rx_ws/src/LCM/pyspy'" >> /root/.bashrc
 
+RUN cd /rx_ws/src && git clone https://github.com/astuff/avt_vimba_camera.git
 
+RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc
+
+RUN echo "[[ -f /rx_ws/devel/setup.bash ]] && source /rx_ws/devel/setup.bash" >> /root/.bashrc
+
+ENV export GENICAM_GENTL64_PATH=$GENICAM_GENTL64_PATH:"/Vimba_6_0/VimbaGigETL/CTI/x86_64bit"
+
+# RUN echo "alias alias_name='/rx_ws/src/LCM/pyspy'" >> /root/.bashrc
+# export GENICAM_GENTL64_PATH=$GENICAM_GENTL64_PATH:"/Vimba_6_0/VimbaGigETL/CTI/x86_64bit
+# roslaunch usydrx_vision start_all_cameras.launch
 # ENV ROS_MASTER_URI=http://172.16.154.230:11311
 
 # ENV ROS_HOSTNAME=172.16.154.230
