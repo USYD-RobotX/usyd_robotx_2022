@@ -551,6 +551,420 @@
       <wave_model>ocean_waves</wave_model>
     </plugin>
   </gazebo>
+  <!-- Monocular Camera -->
+  <link name="wamv/front_camera_link">
+    <visual name="front_camera_visual">
+      <origin rpy="0 0 1.5707963267948966" xyz="-0.033 0 0"/>
+      <geometry>
+        <mesh filename="package://vrx_gazebo/models/mono_camera/mesh/mono_camera.dae"/>
+      </geometry>
+    </visual>
+    <collision name="front_camera_lens_collision">
+      <origin rpy="0 1.5707963267948966 0" xyz="0.018 0 0"/>
+      <geometry>
+        <cylinder length="0.042" radius="0.015"/>
+      </geometry>
+    </collision>
+    <collision name="front_camera_box_collision">
+      <origin rpy="0 0 0" xyz="-0.0205 0 0"/>
+      <geometry>
+        <box size="0.036 0.03 0.03"/>
+      </geometry>
+    </collision>
+    <!-- Model inertia as box with <size>0.078 0.03 0.03</size> -->
+    <inertial>
+      <mass value="0.3"/>
+      <inertia ixx="0.0000450" ixy="0" ixz="0" iyy="0.0001746" iyz="0" izz="0.0001746"/>
+    </inertial>
+  </link>
+  <!-- Define a link for the optical frame.  This will match the sensor frame and
+         be oriented in the camera convention. -->
+  <link name="wamv/front_camera_link_optical">
+    </link>
+  <!-- Sensor post -->
+  <link name="wamv/front_camera_post_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.07649999999999993" radius="0.0076"/>
+      </geometry>
+      <material name="front_camera_post_material">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision name="front_camera_post_collision">
+      <geometry>
+        <cylinder length="0.07649999999999993" radius="0.0076"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.06884999999999994"/>
+      <inertia ixx="3.457147837499991e-05" ixy="0" ixz="0" iyy="3.457147837499991e-05" iyz="0" izz="1.9883879999999983e-06"/>
+    </inertial>
+  </link>
+  <!-- Sensor post arm -->
+  <link name="wamv/front_camera_post_arm_link">
+    <visual name="front_camera_post_arm_visual">
+      <origin rpy="-1.0471975511965976 0 -1.5707963267948966" xyz="-0.038 0 -0.003"/>
+      <geometry>
+        <mesh filename="package://vrx_gazebo/models/sensor_post/mesh/sensor_post_arm.dae"/>
+      </geometry>
+    </visual>
+    <collision name="front_camera_post_arm_collision">
+      <origin rpy="-1.2042771838760873 0 -1.5707963267948966" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.065" radius="0.008"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="-1.2042771838760873 0 -1.5707963267948966" xyz="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.00003680833" ixy="0" ixz="0" iyy="0.00003680833" iyz="0" izz="0.00000320000"/>
+    </inertial>
+  </link>
+  <joint name="wamv/base_to_front_camera_post_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.85 0.0 1.3347499999999999"/>
+    <parent link="wamv/base_link"/>
+    <child link="wamv/front_camera_post_link"/>
+  </joint>
+  <!-- Sensor post to sensor post arm joint -->
+  <joint name="wamv/front_camera_post_to_front_camera_post_arm_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.03 0 0.038250000000000034"/>
+    <parent link="wamv/front_camera_post_link"/>
+    <child link="wamv/front_camera_post_arm_link"/>
+  </joint>
+  <!-- Sensor post arm to camera joint -->
+  <joint name="wamv/front_camera_post_arm_to_front_camera_joint" type="fixed">
+    <origin rpy="0 0.0 0.0" xyz="0.02 0 0.027"/>
+    <parent link="wamv/front_camera_post_arm_link"/>
+    <child link="wamv/front_camera_link"/>
+  </joint>
+  <!-- Camera to optical frame joint.  This is oriented to convert between ENU
+         and camera conventions -->
+  <joint name="wamv/front_camera_to_front_camera_link_optical_joint" type="fixed">
+    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
+    <parent link="wamv/front_camera_link"/>
+    <child link="wamv/front_camera_link_optical"/>
+  </joint>
+  <!-- Gazebo camera setup -->
+  <gazebo reference="wamv/front_camera_link">
+    <sensor name="front_camera_sensor" type="camera">
+      <update_rate>30.0</update_rate>
+      <camera name="front_camera_camera">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>1280</width>
+          <height>720</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise is sampled independently per pixel on each frame.
+                 That pixel's noise value is added to each of its color
+                 channels, which at that point lie in the range [0,1]. -->
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin filename="libgazebo_ros_camera.so" name="camera_plugin_front_camera">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>wamv/sensors/cameras/front_camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>wamv/front_camera_link_optical</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <!-- Set color of post -->
+  <gazebo reference="wamv/front_camera_post_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <!-- Monocular Camera -->
+  <link name="wamv/right_camera_link">
+    <visual name="right_camera_visual">
+      <origin rpy="0 0 1.5707963267948966" xyz="-0.033 0 0"/>
+      <geometry>
+        <mesh filename="package://vrx_gazebo/models/mono_camera/mesh/mono_camera.dae"/>
+      </geometry>
+    </visual>
+    <collision name="right_camera_lens_collision">
+      <origin rpy="0 1.5707963267948966 0" xyz="0.018 0 0"/>
+      <geometry>
+        <cylinder length="0.042" radius="0.015"/>
+      </geometry>
+    </collision>
+    <collision name="right_camera_box_collision">
+      <origin rpy="0 0 0" xyz="-0.0205 0 0"/>
+      <geometry>
+        <box size="0.036 0.03 0.03"/>
+      </geometry>
+    </collision>
+    <!-- Model inertia as box with <size>0.078 0.03 0.03</size> -->
+    <inertial>
+      <mass value="0.3"/>
+      <inertia ixx="0.0000450" ixy="0" ixz="0" iyy="0.0001746" iyz="0" izz="0.0001746"/>
+    </inertial>
+  </link>
+  <!-- Define a link for the optical frame.  This will match the sensor frame and
+         be oriented in the camera convention. -->
+  <link name="wamv/right_camera_link_optical">
+    </link>
+  <!-- Sensor post -->
+  <link name="wamv/right_camera_post_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.07649999999999993" radius="0.0076"/>
+      </geometry>
+      <material name="right_camera_post_material">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision name="right_camera_post_collision">
+      <geometry>
+        <cylinder length="0.07649999999999993" radius="0.0076"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.06884999999999994"/>
+      <inertia ixx="3.457147837499991e-05" ixy="0" ixz="0" iyy="3.457147837499991e-05" iyz="0" izz="1.9883879999999983e-06"/>
+    </inertial>
+  </link>
+  <!-- Sensor post arm -->
+  <link name="wamv/right_camera_post_arm_link">
+    <visual name="right_camera_post_arm_visual">
+      <origin rpy="-1.0471975511965976 0 -1.5707963267948966" xyz="-0.038 0 -0.003"/>
+      <geometry>
+        <mesh filename="package://vrx_gazebo/models/sensor_post/mesh/sensor_post_arm.dae"/>
+      </geometry>
+    </visual>
+    <collision name="right_camera_post_arm_collision">
+      <origin rpy="-1.2042771838760873 0 -1.5707963267948966" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.065" radius="0.008"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="-1.2042771838760873 0 -1.5707963267948966" xyz="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.00003680833" ixy="0" ixz="0" iyy="0.00003680833" iyz="0" izz="0.00000320000"/>
+    </inertial>
+  </link>
+  <joint name="wamv/base_to_right_camera_post_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.7999999999999999 0.1 1.3347499999999999"/>
+    <parent link="wamv/base_link"/>
+    <child link="wamv/right_camera_post_link"/>
+  </joint>
+  <!-- Sensor post to sensor post arm joint -->
+  <joint name="wamv/right_camera_post_to_right_camera_post_arm_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.03 0 0.038250000000000034"/>
+    <parent link="wamv/right_camera_post_link"/>
+    <child link="wamv/right_camera_post_arm_link"/>
+  </joint>
+  <!-- Sensor post arm to camera joint -->
+  <joint name="wamv/right_camera_post_arm_to_right_camera_joint" type="fixed">
+    <origin rpy="0 0.0 1.0471975511965976" xyz="0.02 0 0.027"/>
+    <parent link="wamv/right_camera_post_arm_link"/>
+    <child link="wamv/right_camera_link"/>
+  </joint>
+  <!-- Camera to optical frame joint.  This is oriented to convert between ENU
+         and camera conventions -->
+  <joint name="wamv/right_camera_to_right_camera_link_optical_joint" type="fixed">
+    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
+    <parent link="wamv/right_camera_link"/>
+    <child link="wamv/right_camera_link_optical"/>
+  </joint>
+  <!-- Gazebo camera setup -->
+  <gazebo reference="wamv/right_camera_link">
+    <sensor name="right_camera_sensor" type="camera">
+      <update_rate>30.0</update_rate>
+      <camera name="right_camera_camera">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>1280</width>
+          <height>720</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise is sampled independently per pixel on each frame.
+                 That pixel's noise value is added to each of its color
+                 channels, which at that point lie in the range [0,1]. -->
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin filename="libgazebo_ros_camera.so" name="camera_plugin_right_camera">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>wamv/sensors/cameras/right_camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>wamv/right_camera_link_optical</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <!-- Set color of post -->
+  <gazebo reference="wamv/right_camera_post_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <!-- Monocular Camera -->
+  <link name="wamv/left_camera_link">
+    <visual name="left_camera_visual">
+      <origin rpy="0 0 1.5707963267948966" xyz="-0.033 0 0"/>
+      <geometry>
+        <mesh filename="package://vrx_gazebo/models/mono_camera/mesh/mono_camera.dae"/>
+      </geometry>
+    </visual>
+    <collision name="left_camera_lens_collision">
+      <origin rpy="0 1.5707963267948966 0" xyz="0.018 0 0"/>
+      <geometry>
+        <cylinder length="0.042" radius="0.015"/>
+      </geometry>
+    </collision>
+    <collision name="left_camera_box_collision">
+      <origin rpy="0 0 0" xyz="-0.0205 0 0"/>
+      <geometry>
+        <box size="0.036 0.03 0.03"/>
+      </geometry>
+    </collision>
+    <!-- Model inertia as box with <size>0.078 0.03 0.03</size> -->
+    <inertial>
+      <mass value="0.3"/>
+      <inertia ixx="0.0000450" ixy="0" ixz="0" iyy="0.0001746" iyz="0" izz="0.0001746"/>
+    </inertial>
+  </link>
+  <!-- Define a link for the optical frame.  This will match the sensor frame and
+         be oriented in the camera convention. -->
+  <link name="wamv/left_camera_link_optical">
+    </link>
+  <!-- Sensor post -->
+  <link name="wamv/left_camera_post_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.07649999999999993" radius="0.0076"/>
+      </geometry>
+      <material name="left_camera_post_material">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision name="left_camera_post_collision">
+      <geometry>
+        <cylinder length="0.07649999999999993" radius="0.0076"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.06884999999999994"/>
+      <inertia ixx="3.457147837499991e-05" ixy="0" ixz="0" iyy="3.457147837499991e-05" iyz="0" izz="1.9883879999999983e-06"/>
+    </inertial>
+  </link>
+  <!-- Sensor post arm -->
+  <link name="wamv/left_camera_post_arm_link">
+    <visual name="left_camera_post_arm_visual">
+      <origin rpy="-1.0471975511965976 0 -1.5707963267948966" xyz="-0.038 0 -0.003"/>
+      <geometry>
+        <mesh filename="package://vrx_gazebo/models/sensor_post/mesh/sensor_post_arm.dae"/>
+      </geometry>
+    </visual>
+    <collision name="left_camera_post_arm_collision">
+      <origin rpy="-1.2042771838760873 0 -1.5707963267948966" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.065" radius="0.008"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="-1.2042771838760873 0 -1.5707963267948966" xyz="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.00003680833" ixy="0" ixz="0" iyy="0.00003680833" iyz="0" izz="0.00000320000"/>
+    </inertial>
+  </link>
+  <joint name="wamv/base_to_left_camera_post_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.7999999999999999 -0.1 1.3347499999999999"/>
+    <parent link="wamv/base_link"/>
+    <child link="wamv/left_camera_post_link"/>
+  </joint>
+  <!-- Sensor post to sensor post arm joint -->
+  <joint name="wamv/left_camera_post_to_left_camera_post_arm_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.03 0 0.038250000000000034"/>
+    <parent link="wamv/left_camera_post_link"/>
+    <child link="wamv/left_camera_post_arm_link"/>
+  </joint>
+  <!-- Sensor post arm to camera joint -->
+  <joint name="wamv/left_camera_post_arm_to_left_camera_joint" type="fixed">
+    <origin rpy="0 0.0 -1.0471975511965976" xyz="0.02 0 0.027"/>
+    <parent link="wamv/left_camera_post_arm_link"/>
+    <child link="wamv/left_camera_link"/>
+  </joint>
+  <!-- Camera to optical frame joint.  This is oriented to convert between ENU
+         and camera conventions -->
+  <joint name="wamv/left_camera_to_left_camera_link_optical_joint" type="fixed">
+    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
+    <parent link="wamv/left_camera_link"/>
+    <child link="wamv/left_camera_link_optical"/>
+  </joint>
+  <!-- Gazebo camera setup -->
+  <gazebo reference="wamv/left_camera_link">
+    <sensor name="left_camera_sensor" type="camera">
+      <update_rate>30.0</update_rate>
+      <camera name="left_camera_camera">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>1280</width>
+          <height>720</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise is sampled independently per pixel on each frame.
+                 That pixel's noise value is added to each of its color
+                 channels, which at that point lie in the range [0,1]. -->
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin filename="libgazebo_ros_camera.so" name="camera_plugin_left_camera">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>wamv/sensors/cameras/left_camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>wamv/left_camera_link_optical</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <!-- Set color of post -->
+  <gazebo reference="wamv/left_camera_post_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
   <link name="wamv/gps_wamv_link">
     <visual name="gps_wamv_visual">
       <geometry>
@@ -654,6 +1068,122 @@
       <yawGaussianNoise>0.0</yawGaussianNoise>
     </plugin>
   </gazebo>
+  <!-- 3d lidar sensor -->
+  <link name="wamv/lidar_wamv_front_link">
+    <visual name="lidar_wamv_front_visual">
+      <origin rpy="0 0 0" xyz="0 0 -0.035"/>
+      <geometry>
+        <mesh filename="package://vrx_gazebo/models/3d_lidar/mesh/3d_lidar.dae"/>
+      </geometry>
+    </visual>
+    <collision name="lidar_wamv_front_collision">
+      <geometry>
+        <cylinder length="0.075" radius="0.055"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.00109375" ixy="0" ixz="0" iyy="0.00109375" iyz="0" izz="0.00125"/>
+    </inertial>
+  </link>
+  <!-- Sensor post -->
+  <link name="wamv/lidar_wamv_front_post_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.20350000000000007" radius="0.0076"/>
+      </geometry>
+      <material name="lidar_wamv_front_post_material">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision name="lidar_wamv_front_post_collision">
+      <geometry>
+        <cylinder length="0.20350000000000007" radius="0.0076"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.18315000000000006"/>
+      <inertia ixx="0.0006346991516250006" ixy="0" ixz="0" iyy="0.0006346991516250006" iyz="0" izz="5.289372000000002e-06"/>
+    </inertial>
+  </link>
+  <!-- Sensor post arm -->
+  <link name="wamv/lidar_wamv_front_post_arm_link">
+    <visual name="lidar_wamv_front_post_arm_visual">
+      <origin rpy="-1.0471975511965976 0 -1.5707963267948966" xyz="-0.038 0 -0.003"/>
+      <geometry>
+        <mesh filename="package://vrx_gazebo/models/sensor_post/mesh/sensor_post_arm.dae"/>
+      </geometry>
+    </visual>
+    <collision name="lidar_wamv_front_post_arm_collision">
+      <origin rpy="-1.2042771838760873 0 -1.5707963267948966" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.065" radius="0.008"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="-1.2042771838760873 0 -1.5707963267948966" xyz="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.00003680833" ixy="0" ixz="0" iyy="0.00003680833" iyz="0" izz="0.00000320000"/>
+    </inertial>
+  </link>
+  <joint name="wamv/base_to_lidar_wamv_front_post_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.78 0.0 1.39825"/>
+    <parent link="wamv/base_link"/>
+    <child link="wamv/lidar_wamv_front_post_link"/>
+  </joint>
+  <!-- Sensor post to sensor post arm joint -->
+  <joint name="wamv/lidar_wamv_front_post_to_lidar_wamv_front_post_arm_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.03 0 0.10175000000000005"/>
+    <parent link="wamv/lidar_wamv_front_post_link"/>
+    <child link="wamv/lidar_wamv_front_post_arm_link"/>
+  </joint>
+  <!-- Sensor post arm to lidar joint -->
+  <joint name="wamv/lidar_wamv_front_post_arm_to_lidar_wamv_front_joint" type="fixed">
+    <origin rpy="0 0.20943951023931956 0" xyz="0.04 0 0.05"/>
+    <parent link="wamv/lidar_wamv_front_post_arm_link"/>
+    <child link="wamv/lidar_wamv_front_link"/>
+  </joint>
+  <gazebo reference="wamv/lidar_wamv_front_link">
+    <sensor name="lidar_wamv_front_sensor" type="gpu_ray">
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>18750.0</samples>
+            <resolution>0.1</resolution>
+            <min_angle>-3.141592653589793</min_angle>
+            <max_angle>3.141592653589793</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>16</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.2617993877991494</min_angle>
+            <max_angle>0.2617993877991494</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>130</max>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin filename="libgazebo_ros_velodyne_gpu_laser.so" name="lidar_wamv_front_plugin">
+        <topicName>wamv/sensors/lidars/lidar_wamv_front/points</topicName>
+        <frameName>wamv/lidar_wamv_front_link</frameName>
+        <min_intensity>0</min_intensity>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <!-- Set color of post -->
+  <gazebo reference="wamv/lidar_wamv_front_post_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <!--specs for 16 beam lidar are implemented by default.
+          See wamv_3d_lidar for those-->
   <link name="wamv/cpu_cases_link">
     <visual name="cpu_cases_visual">
       <origin rpy="0 0 0" xyz="0.073 0 -1.53"/>

@@ -73,15 +73,19 @@ ENV ROS_MASTER_URI=http://172.16.154.230:11311
 
 ENV ROS_HOSTNAME=172.16.154.230
 
-ADD . /rx_ws/src/usyd_robotx_2022
+# RUN source /opt/ros/noetic/setup.bash && cd /rx_ws && catkin_make
 
-RUN source /opt/ros/noetic/setup.bash && cd /rx_ws && catkin_make
+# RUN source /rx_ws/devel/setup.bash
 
-RUN source /rx_ws/devel/setup.bash
 
-RUN chmod +x /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy
 
-RUN ln -s /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy /usr/local/bin/pyspy
+# ADD . /rx_ws/src/usyd_robotx_2022
+
+# RUN source /opt/ros/noetic/setup.bash && cd /rx_ws && catkin_make
+
+# RUN chmod +x /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy
+
+# RUN ln -s /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy /usr/local/bin/pyspy
 
 
 # # Copy pyspy to docker container

@@ -1,17 +1,23 @@
 Panels:
   - Class: rviz/Displays
-    Help Height: 78
+    Help Height: 0
     Name: Displays
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /Status1
         - /Grid1
+        - /RobotModel1
+        - /Axes1
         - /AerialMapDisplay1
         - /Path1
-        - /Map1
         - /Map2
+        - /PointCloud21
+        - /Front Camera1
+        - /Right Camera1
+        - /Left Camera1
       Splitter Ratio: 0.5
-    Tree Height: 401
+    Tree Height: 256
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -25,7 +31,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: PointCloud2
   - Class: rviz/Views
     Expanded:
       - /Current View1
@@ -54,7 +60,7 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 10
-      Reference Frame: wamv/base_link
+      Reference Frame: odom
       Value: true
     - Alpha: 1
       Class: rviz/RobotModel
@@ -80,6 +86,25 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        wamv/front_camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wamv/front_camera_link_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        wamv/front_camera_post_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wamv/front_camera_post_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         wamv/gps_wamv_link:
           Alpha: 1
           Show Axes: false
@@ -91,6 +116,25 @@ Visualization Manager:
           Show Trail: false
           Value: true
         wamv/left_battery_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wamv/left_camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wamv/left_camera_link_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        wamv/left_camera_post_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wamv/left_camera_post_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -115,7 +159,41 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        wamv/lidar_wamv_front_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wamv/lidar_wamv_front_post_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wamv/lidar_wamv_front_post_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         wamv/right_battery_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wamv/right_camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wamv/right_camera_link_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        wamv/right_camera_post_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wamv/right_camera_post_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -152,7 +230,7 @@ Visualization Manager:
       Length: 1
       Name: Axes
       Radius: 0.10000000149011612
-      Reference Frame: wamv/base_link
+      Reference Frame: odom
       Show Trail: false
       Value: true
     - Class: rviz/TF
@@ -160,7 +238,9 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        map:
+        novatel:
+          Value: true
+        odom:
           Value: true
         utm:
           Value: true
@@ -170,11 +250,27 @@ Visualization Manager:
           Value: true
         wamv/dummy_link:
           Value: true
+        wamv/front_camera_link:
+          Value: true
+        wamv/front_camera_link_optical:
+          Value: true
+        wamv/front_camera_post_arm_link:
+          Value: true
+        wamv/front_camera_post_link:
+          Value: true
         wamv/gps_wamv_link:
           Value: true
         wamv/imu_wamv_link:
           Value: true
         wamv/left_battery_link:
+          Value: true
+        wamv/left_camera_link:
+          Value: true
+        wamv/left_camera_link_optical:
+          Value: true
+        wamv/left_camera_post_arm_link:
+          Value: true
+        wamv/left_camera_post_link:
           Value: true
         wamv/left_front_engine_link:
           Value: true
@@ -184,9 +280,21 @@ Visualization Manager:
           Value: true
         wamv/left_rear_propeller_link:
           Value: true
-        wamv/odom:
+        wamv/lidar_wamv_front_link:
+          Value: true
+        wamv/lidar_wamv_front_post_arm_link:
+          Value: true
+        wamv/lidar_wamv_front_post_link:
           Value: true
         wamv/right_battery_link:
+          Value: true
+        wamv/right_camera_link:
+          Value: true
+        wamv/right_camera_link_optical:
+          Value: true
+        wamv/right_camera_post_arm_link:
+          Value: true
+        wamv/right_camera_post_link:
           Value: true
         wamv/right_front_engine_link:
           Value: true
@@ -196,6 +304,8 @@ Visualization Manager:
           Value: true
         wamv/right_rear_propeller_link:
           Value: true
+        xsens_imu:
+          Value: true
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
@@ -203,46 +313,75 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          wamv/odom:
-            utm:
+        odom:
+          utm:
+            {}
+          wamv/base_link:
+            novatel:
               {}
-            wamv/base_link:
-              wamv/cpu_cases_link:
+            wamv/cpu_cases_link:
+              {}
+            wamv/dummy_link:
+              {}
+            wamv/front_camera_post_link:
+              wamv/front_camera_post_arm_link:
+                wamv/front_camera_link:
+                  wamv/front_camera_link_optical:
+                    {}
+            wamv/gps_wamv_link:
+              {}
+            wamv/imu_wamv_link:
+              {}
+            wamv/left_battery_link:
+              {}
+            wamv/left_camera_post_link:
+              wamv/left_camera_post_arm_link:
+                wamv/left_camera_link:
+                  wamv/left_camera_link_optical:
+                    {}
+            wamv/left_front_engine_link:
+              wamv/left_front_propeller_link:
                 {}
-              wamv/dummy_link:
+            wamv/left_rear_engine_link:
+              wamv/left_rear_propeller_link:
                 {}
-              wamv/gps_wamv_link:
-                {}
-              wamv/imu_wamv_link:
-                {}
-              wamv/left_battery_link:
-                {}
-              wamv/left_front_engine_link:
-                wamv/left_front_propeller_link:
+            wamv/lidar_wamv_front_post_link:
+              wamv/lidar_wamv_front_post_arm_link:
+                wamv/lidar_wamv_front_link:
                   {}
-              wamv/left_rear_engine_link:
-                wamv/left_rear_propeller_link:
-                  {}
-              wamv/right_battery_link:
+            wamv/right_battery_link:
+              {}
+            wamv/right_camera_post_link:
+              wamv/right_camera_post_arm_link:
+                wamv/right_camera_link:
+                  wamv/right_camera_link_optical:
+                    {}
+            wamv/right_front_engine_link:
+              wamv/right_front_propeller_link:
                 {}
-              wamv/right_front_engine_link:
-                wamv/right_front_propeller_link:
-                  {}
-              wamv/right_rear_engine_link:
-                wamv/right_rear_propeller_link:
-                  {}
+            wamv/right_rear_engine_link:
+              wamv/right_rear_propeller_link:
+                {}
+            xsens_imu:
+              {}
       Update Interval: 0
       Value: true
     - Alpha: 1
       Blocks: 8
       Class: rviz_plugins/AerialMapDisplay
       Draw Behind: true
-      Enabled: false
+      Enabled: true
+      Map Frame: odom
+      Map transform type: NavSatFix Messages and Map Frame
       Name: AerialMapDisplay
       Object URI: https://b.tile.openstreetmap.org/{z}/{x}/{y}.png
-      Topic: /wamv/sensors/gps/gps/fix
-      Value: false
+      Topic: /fix
+      UTM Frame: utm
+      UTM Zone: -1
+      Value: true
+      XY Reference: <NavSatFix Message>
+      Z Offset: 0
+      Z Reference: <NavSatFix Message>
       Zoom: 18
     - Alpha: 1
       Axes Length: 1
@@ -288,12 +427,12 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: map
       Draw Behind: false
-      Enabled: true
+      Enabled: false
       Name: Map
       Topic: /wamv/map
       Unreliable: false
       Use Timestamp: false
-      Value: true
+      Value: false
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /wamv/visualisation/objects
@@ -306,17 +445,81 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: costmap
       Draw Behind: false
-      Enabled: true
+      Enabled: false
       Name: Map
       Topic: /wamv/global_planner/costmap/costmap
       Unreliable: false
       Use Timestamp: false
+      Value: false
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.10000000149011612
+      Style: Flat Squares
+      Topic: /wamv/sensors/lidars/lidar_wamv_front/points
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+    - Class: rviz/Image
+      Enabled: true
+      Image Topic: /wamv/sensors/cameras/front_camera/image_raw
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Front Camera
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: true
+    - Class: rviz/Image
+      Enabled: true
+      Image Topic: /wamv/sensors/cameras/right_camera/image_raw
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Right Camera
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: true
+    - Class: rviz/Image
+      Enabled: true
+      Image Topic: /wamv/sensors/cameras/left_camera/image_raw
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Left Camera
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
       Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: map
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -340,7 +543,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 10
+      Distance: 13.20058822631836
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -356,9 +559,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7853981852531433
+      Pitch: 0.9453977942466736
       Target Frame: wamv/base_link
-      Yaw: 0.7853981852531433
+      Yaw: 1.3953979015350342
     Saved:
       - Class: rviz/Orbit
         Distance: 48.64983367919922
@@ -383,10 +586,16 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
+  Front Camera:
+    collapsed: false
   Height: 1016
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000004f30000039efc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d0000021c000000c900fffffffb0000000800540069006d0065010000025f000000500000003900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0056006900650077007301000002b500000126000000a400ffffff000000010000010f00000374fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003b000003740000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000078000000102fc0100000004fb0000001800520069006700680074002000430061006d0065007200610000000000000007800000000000000000fb0000001800460072006f006e0074002000430061006d00650072006100000002a5000002a10000000000000000fb00000016004c006500660074002000430061006d00650072006100000004160000036a0000000000000000fb0000000800540069006d006501000000000000045000000000000000000000023f0000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Left Camera:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd0000000400000000000002eb000002a5fc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d0000013d000000c900fffffffb0000000800540069006d006501000001800000005a0000003900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0056006900650077007301000001e000000102000000a400ffffff000000010000010f00000374fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003b000003740000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000738000000f3fc0100000007fb00000016004c006500660074002000430061006d0065007200610100000000000002710000008800fffffffb0000001800460072006f006e0074002000430061006d0065007200610100000277000002770000009100fffffffb0000001800520069006700680074002000430061006d00650072006101000004f4000002440000009000fffffffb0000001800520069006700680074002000430061006d0065007200610000000000000007800000000000000000fb0000001800460072006f006e0074002000430061006d00650072006100000002a5000002a10000000000000000fb00000016004c006500660074002000430061006d00650072006100000004160000036a0000000000000000fb0000000800540069006d0065010000000000000450000000000000000000000447000002a500000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Right Camera:
+    collapsed: false
   Selection:
     collapsed: false
   Time:
