@@ -1,0 +1,6 @@
+<launch>
+
+    <node name="object_server" pkg="usyd_vrx_navigation" type="object_server2.py"/>
+    <node name="object_visualiser" pkg="usyd_vrx_navigation" type="object_to_visualisation.py"/>
+
+</launch>

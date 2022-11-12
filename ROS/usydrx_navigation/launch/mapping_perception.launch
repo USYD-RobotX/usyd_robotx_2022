@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="vehicle" default="wamv" />
+    
+   
+    <node pkg="usyd_vrx_navigation" type="mapping" name="mapping" output="screen">
+        <param name="~width" value="1024"/>
+        <param name="~resolution" value="0.4"/>
+        <param name="~offset_x" value="400.0"/>
+        <param name="~offset_y" value="100.0"/>
+        <param name="~increment" value="8"/>
+        <param name="~decrement" value="2"/>
+        <param name="~clr_range" value="3"/>
+        <param name="~min_range" value="10"/>
+        
+        <remap from="scan" to="/wamv/sensors/lidars/scan_multi"/>
+    </node> 
+
+
+
+    
+
+</launch>

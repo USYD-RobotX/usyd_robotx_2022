@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<!-- DESCRITPION -->
+
+<launch>
+
+
+	<arg name="vehicle" default="wamv" />
+	<arg name="lidar1" default="lidar_wamv_front" />
+	<arg name="lidar2" default="lidar_wamv_back" />
+    
+	<node pkg="ira_laser_tools" name="laserscan_multi_merger" type="laserscan_multi_merger" output="screen">
+		<param name="destination_frame" value="wamv/base_link"/>
+		<param name="cloud_destination_topic" value="/wamv/sensors/lidars/merged_cloud"/>
+		<param name="scan_destination_topic" value="/wamv/sensors/lidars/scan_multi"/>
+		<param name="laserscan_topics" value ="/$(arg vehicle)/sensors/lidars/$(arg lidar1)/scan /$(arg vehicle)/sensors/lidars/$(arg lidar2)/scan" /> <!-- LIST OF THE LASER SCAN TOPICS TO SUBSCRIBE -->
+		<param name="angle_min" value="-10"/>
+		<param name="angle_max" value="10"/>
+		<param name="angle_increment" value="0.005"/>
+		<param name="scan_time" value="0.3333333"/>
+		<param name="range_min" value="0.450"/>
+		<param name="range_max" value="500.0"/>
+	</node>
+
+</launch>

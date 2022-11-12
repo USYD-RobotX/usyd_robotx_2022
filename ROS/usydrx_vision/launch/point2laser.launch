@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<launch>
+
+    <param name="/use_sim_time" value="true" />
+    <arg name="vehicle" default="wamv" />
+
+    <arg name="lidar1" default="lidar_wamv_front" />
+    
+    <node pkg="tf" type="static_transform_publisher" name="lidar_static_broadcaster" args="0 0 0 0 0.261799 0 wamv/lidar_wamv_front_link wamv/lidar_wamv_front_link_straight   1000" />
+
+    <!-- Start Pointcloud to laserscan node  -->
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan_$(arg lidar1)">
+
+        <remap from="cloud_in" to="$(arg vehicle)/sensors/lidars/$(arg lidar1)/points"/>
+        <remap from="scan" to="$(arg vehicle)/sensors/lidars/$(arg lidar1)/scan"/>
+        <rosparam>
+            target_frame: wamv/base_link
+            # transform_tolerance: 0.01
+            min_height: -100
+            max_height: 100
+            angle_min: -1.5707 # -3.14 # -1.5708 # -M_PI/2
+            angle_max: 1.5707 #  1.5708 # M_PI/2
+            angle_increment: 0.00155832837  # 0.0087 # M_PI/360.0
+            scan_time: 0.1
+            range_min: 4
+            range_max: 600
+            use_inf: true
+
+            # Concurrency level, affects number of pointclouds queued for processing and number of threads used
+            # 0 : Detect number of cores
+            # 1 : Single threaded
+            # 2->inf : Parallelism level
+            concurrency_level: 1
+        </rosparam>     
+          
+    </node> 
+    <!-- <node pkg="ira_laser_tools" name="laserscan_multi_merger" type="laserscan_multi_merger" output="screen">
+		<param name="destination_frame" value="wamv/base_link"/>
+		<param name="cloud_destination_topic" value="/wamv/sensors/lidars/merged_cloud"/>
+		<param name="scan_destination_topic" value="/wamv/sensors/lidars/scan_multi"/>
+		<param name="laserscan_topics" value ="/wamv/sensors/lidars/lidar_wamv_front/scan" /> 
+		<param name="angle_min" value="-10"/>
+		<param name="angle_max" value="10"/>
+		<param name="angle_increment" value="0.00155832837"/>
+		<param name="scan_time" value="01"/>
+		<param name="range_min" value="0.1"/>
+		<param name="range_max" value="500.0"/>
+	</node> -->
+
+
+</launch>
