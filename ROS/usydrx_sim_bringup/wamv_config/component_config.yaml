@@ -1,31 +1,38 @@
-# wamv_camera:
-#     - name: front_camera
-#       x: 0.75
-#       y: 0
-#       Y: ${radians(0)}
-#       P: ${radians(15)}
-#     - name: right_camera
-#       x: 0.75
-#       y: 0.1
-#       Y: ${radians(40)}
-#       P: ${radians(15)}
-#     - name: left_camera
-#       x: 0.75
-#       y: -0.1
-#       Y: ${radians(-40)}
-#       P: ${radians(15)}
+wamv_camera:
+    - name: front_camera
+      x: 0.9
+      y: 0
+      z: 1.4
+      Y: ${radians(0)}
+      P: ${radians(0)}
+      # P: ${radians(12)}
+    - name: right_camera
+      x: 0.85
+      y: 0.1
+      z: 1.4
+      Y: ${radians(60)}
+      P: ${radians(0)}
+
+    - name: left_camera
+      x: 0.85
+      y: -0.1
+      z: 1.4
+      Y: ${radians(-60)}
+      P: ${radians(0)}
 wamv_gps:
     - name: gps_wamv
       x: -0.85
 wamv_imu:
     - name: imu_wamv
       y: -0.2
-# lidar:
-#     - name: lidar_wamv_front
-#       type: 16_beam
-#       x: 0.6 
-#       y: 0
-#       z: 1.6
+lidar:
+    - name: lidar_wamv_front
+      type: 16_beam
+      x: 0.85
+      y: 0
+      z: 1.55
+      P: ${radians(15)}
+
 #     - name: lidar_wamv_back
 #       type: 16_beam
 #       x: -0.85 

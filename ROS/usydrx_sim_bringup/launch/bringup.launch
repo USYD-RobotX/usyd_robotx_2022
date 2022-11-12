@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+    <param name="wamv/robot_description" command="$(find xacro)/xacro &#x002D;&#x002D;inorder '$(find usydrx_sim_bringup)/urdf/usyd_vrx_wamv.urdf'"/>
+    <node ns = "wamv" pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub"/>
+
+    <node ns = "wamv" pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+    </node>
+    <include file="$(find usydrx_vision)/launch/start_all_cameras_and_lidar.launch">
+    </include>
+    <include file="$(find usydrx_lcm_bridge)/launch/run_bridge.launch">
+    </include>
+    
+</launch>

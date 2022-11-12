@@ -1,0 +1,25 @@
+
+<launch>
+
+  <rosparam command="load" file="$(find usydrx_lcm_bridge)/params/localisation_ekf_navsat.yaml" />
+
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf" clear_params="true" output="screen">
+      <remap from="odometry/flitered" to="/nav_box_odom"/>
+  </node>
+
+  <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" clear_params="true" output="screen">
+    <remap from="imu/data" to="/xsens_imu"/>
+    <remap from="gps/fix" to="/fix"/>
+    <!-- <param name="datum" value="-33.7225619 150.67 0.0"/> -->
+    <param name="wait_for_datum" value="true"/>
+    <rosparam param="datum">[-33.7225619, 150.67]</rosparam>
+  </node>
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="imu_link" args="0 0 -1.4 0 0 0  wamv/base_link xsens_imu" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="novatel_link" args="0 0 -1.4 0 0 0   wamv/base_link novatel" />
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="nav_link" args="0 0 -1.4 0 0 0  nav_base_link wamv/base_link" /> -->
+<!-- 
+    <node pkg="usydrx_lcm_bridge" type="pub_initial_pose.py" clear_params="true" output="screen" name="init_pose">
+  </node> -->
+
+</launch>

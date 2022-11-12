@@ -3,7 +3,7 @@
   <arg name="name" default="camera_centre" doc="The name of the camera"/>
   <arg name="ip" default="172.16.154.243" doc="The IP for the camera to connect to"/>
   <arg name="guid" default="" doc="The GUID for the camera to connect to"/>
-  <arg name="frame_id" default="$(arg name)" doc="The frame id of the camera"/>
+  <arg name="frame_id" default="/wamv/front_camera_link_optical" doc="The frame id of the camera"/>
   <arg name="use_measurement_time" default="false" doc="Use the measurement time from the camera"/>
   <arg name="ptp_offset" default="-37" doc="Offset to add to the timestamp from the camera (s).
     Useful for converting from TAI to UTC time. Only applies if use_measurement_time is true"/>
@@ -84,6 +84,9 @@
   </group>
 
   <node name="$(arg name)" pkg="avt_vimba_camera" type="mono_camera_node" output="screen">
+
+    <remap from="/camera_centre/image_raw" to="wamv/sensors/cameras/front_camera/image_raw"/>
+
     <param name="ip" value="$(arg ip)"/>
     <param name="guid" value="$(arg guid)"/>
     <param name="frame_id" value="$(arg frame_id)"/>

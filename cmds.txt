@@ -1,0 +1,61 @@
+
+
+
+
+SSH into the nav container
+
+#navbox
+ssh auv@172.16.154.160
+./make_rw.sh
+./start_lcm.sh
+
+
+
+#wamv
+To SSH into the WAMV
+ssh -YC auv@wamv
+
+bot-lcm-tunnel 172.16.154.160
+./load_can.sh
+./start_lcm.sh
+
+
+You can now operate the motors on the WAMV
+
+
+cd /media/data/robotx_28-10-22
+mkdir session_1
+lcm-logger 
+
+
+docker rm wamv_container
+docker run --network=host -it --name wamv_container wamv_image:latest
+
+source /rx_ws/devel/setup.bash
+
+
+# ROSdocker
+cd ~
+./start_logging_docker.sh
+
+source /opt/ros/noetic/setup.bash 
+cd /rx_ws && catkin_make
+
+chmod +x /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy
+ln -s /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy /usr/local/bin/pyspy
+
+export GENICAM_GENTL64_PATH=$GENICAM_GENTL64_PATH:"/Vimba_6_0/VimbaGigETL/CTI/x86_64bit"
+roslaunch usydrx_vision start_all_cameras.launch &
+roslaunch rslidar_pointcloud rs_lidar_16.launch &
+chmod +x /rx_ws/src/usyd_robotx_2022/ROS/usydrx_lcm_bridge/src/nav_data_bridge.py
+rosrun usydrx_lcm_bridge nav_data_bridge.py
+
+python /rx_ws/src/usyd_robotx_2022/ROS/usydrx_lcm_bridge/src/nav_data_bridge.py &
+
+cd /media/data/robotx_28-10-22
+
+rosbag record -a --split --size=200
+
+export ROS_MASTER_URI=http://172.16.154.230:11311
+export ROS_HOSTNAME=172.16.154.136
+

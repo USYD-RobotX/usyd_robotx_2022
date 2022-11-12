@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    <node  name="nav_inode" pkg="usydrx_lcm_bridge" type="nav_data_bridge.py"/>
+
+    <include file="$(find usydrx_lcm_bridge)/launch/localisation.launch">
+    </include>
+</launch>
+
+

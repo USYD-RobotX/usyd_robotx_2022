@@ -1,5 +1,5 @@
-image_width: 1936
-image_height: 1080
+image_width: 1200
+image_height: 720
 camera_name: camera_right
 camera_matrix:
   rows: 3
