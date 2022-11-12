@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="vehicle" default="wamv" />
+    <arg name="lidar1" default="lidar_wamv_front" />
+    <arg name="lidar2" default="lidar_wamv_back" />
+    
+   
+    <node pkg="usyd_vrx_navigation" type="mapping" name="mapping" output="screen">
+        <param name="~width" value="1024"/>
+        <param name="~resolution" value="0.4"/>
+        <param name="~offset_x" value="400"/>
+        <param name="~offset_y" value="100"/>
+        <remap from="scan" to="/wamv/sensors/lidars/lidar_wamv_front/scan"/>
+    </node>          
+
+</launch>

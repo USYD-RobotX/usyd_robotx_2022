@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+	<include file="$(find usyd_vrx_navigation)/launch/map_server.launch"/>
+	<include file="$(find usyd_vrx_navigation)/launch/point2laser.launch"/>
+	<include file="$(find usyd_vrx_navigation)/launch/laserscan_multi_merger.launch"/>
+	<include file="$(find usyd_vrx_navigation)/launch/mapping2.launch"/>
+
+
+
+</launch>

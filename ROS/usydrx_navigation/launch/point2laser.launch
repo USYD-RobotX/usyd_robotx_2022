@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<launch>
+
+
+    <arg name="vehicle" default="wamv" />
+    <arg name="lidar1" default="lidar_wamv_front" />
+    <arg name="lidar2" default="lidar_wamv_back" />
+    
+    
+    <!-- Start Pointcloud to laserscan node  -->
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan_$(arg lidar1)">
+
+        <remap from="cloud_in" to="$(arg vehicle)/sensors/lidars/$(arg lidar1)/points"/>
+        <remap from="scan" to="$(arg vehicle)/sensors/lidars/$(arg lidar1)/scan"/>
+        <rosparam>
+            target_frame: wamv/lidar_wamv_front_link # Leave disabled to output scan in pointcloud frame
+            transform_tolerance: 0.01
+            min_height: -3.0
+            max_height: 1.0
+
+            angle_min: -1.5708 # -M_PI/2
+            angle_max: 1.5708 # M_PI/2
+            angle_increment: 0.0087 # M_PI/360.0
+            scan_time: 0.3333
+            range_min: 2
+            range_max: 200
+            use_inf: true
+
+            # Concurrency level, affects number of pointclouds queued for processing and number of threads used
+            # 0 : Detect number of cores
+            # 1 : Single threaded
+            # 2->inf : Parallelism level
+            concurrency_level: 1
+        </rosparam>     
+          
+    </node> 
+    
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan_$(arg lidar2)">
+
+        <remap from="cloud_in" to="$(arg vehicle)/sensors/lidars/$(arg lidar2)/points"/>
+        <remap from="scan" to="$(arg vehicle)/sensors/lidars/$(arg lidar2)/scan"/>
+        
+        <rosparam>
+            target_frame: wamv/lidar_wamv_back_link # Leave disabled to output scan in pointcloud frame
+            transform_tolerance: 0.01
+            min_height: -3.0
+            max_height: 1.0
+
+            angle_min: -1.5708 # -M_PI/2
+            angle_max: 1.5708 # M_PI/2
+            angle_increment: 0.0087 # M_PI/360.0
+            scan_time: 0.3333
+            range_min: 2
+            range_max: 200
+            use_inf: true
+
+            # Concurrency level, affects number of pointclouds queued for processing and number of threads used
+            # 0 : Detect number of cores
+            # 1 : Single threaded
+            # 2->inf : Parallelism level
+            concurrency_level: 1
+        </rosparam>     
+          
+    </node>           
+
+</launch>

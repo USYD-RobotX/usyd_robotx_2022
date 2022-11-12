@@ -85,9 +85,9 @@ ENV ROS_HOSTNAME=172.16.154.230
 
 # RUN source /opt/ros/noetic/setup.bash && cd /rx_ws && catkin_make
 
-# RUN chmod +x /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy
+# # RUN chmod +x /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy
 
-# RUN ln -s /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy /usr/local/bin/pyspy
+# # RUN ln -s /rx_ws/src/usyd_robotx_2022/LCM/acfr/pyspy /usr/local/bin/pyspy
 
 
 # # Copy pyspy to docker container

@@ -1,0 +1,2 @@
+convert wamv_map2.pgm wamv_map2.png
+

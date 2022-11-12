@@ -466,7 +466,7 @@
         <angleTopic>thrusters/left_rear_thrust_angle</angleTopic>
         <enableAngle>True</enableAngle>
         <!-- Optional Parameters -->
-        <mappingType>1</mappingType>
+        <mappingType>0</mappingType>
         <maxCmd>1.0</maxCmd>
         <maxForceFwd>250.0</maxForceFwd>
         <maxForceRev>-100.0</maxForceRev>
@@ -481,7 +481,7 @@
         <angleTopic>thrusters/right_rear_thrust_angle</angleTopic>
         <enableAngle>True</enableAngle>
         <!-- Optional Parameters -->
-        <mappingType>1</mappingType>
+        <mappingType>0</mappingType>
         <maxCmd>1.0</maxCmd>
         <maxForceFwd>250.0</maxForceFwd>
         <maxForceRev>-100.0</maxForceRev>
@@ -496,7 +496,7 @@
         <angleTopic>thrusters/left_front_thrust_angle</angleTopic>
         <enableAngle>True</enableAngle>
         <!-- Optional Parameters -->
-        <mappingType>1</mappingType>
+        <mappingType>0</mappingType>
         <maxCmd>1.0</maxCmd>
         <maxForceFwd>250.0</maxForceFwd>
         <maxForceRev>-100.0</maxForceRev>
@@ -511,7 +511,7 @@
         <angleTopic>thrusters/right_front_thrust_angle</angleTopic>
         <enableAngle>True</enableAngle>
         <!-- Optional Parameters -->
-        <mappingType>1</mappingType>
+        <mappingType>0</mappingType>
         <maxCmd>1.0</maxCmd>
         <maxForceFwd>250.0</maxForceFwd>
         <maxForceRev>-100.0</maxForceRev>
@@ -997,7 +997,7 @@
   </joint>
   <gazebo>
     <plugin filename="libhector_gazebo_ros_gps.so" name="gps_plugin_gps_wamv">
-      <updateRate>15</updateRate>
+      <updateRate>60</updateRate>
       <alwaysOn>true</alwaysOn>
       <bodyName>wamv/gps_wamv_link</bodyName>
       <!-- Manually prepend namespace to tf frame. -->
@@ -1047,7 +1047,7 @@
   </joint>
   <gazebo>
     <plugin filename="libhector_gazebo_ros_imu.so" name="imu_plugin_imu_wamv">
-      <updateRate>15</updateRate>
+      <updateRate>60</updateRate>
       <bodyName>wamv/imu_wamv_link</bodyName>
       <topicName>wamv/sensors/imu/imu/data</topicName>
       <serviceName>wamv/sensors/imu_service</serviceName>
@@ -1056,15 +1056,15 @@
       <alwaysOn>true</alwaysOn>
       <accelOffset>0.0 0.0 0.0</accelOffset>
       <accelDrift>0.0 0.0 0.0</accelDrift>
-      <accelDriftFrequency>0.00027 0.00027 0.000027</accelDriftFrequency>
+      <accelDriftFrequency>0.0 0.0 0.0</accelDriftFrequency>
       <accelGaussianNoise>0.0 0.0 0.0</accelGaussianNoise>
       <rateOffset>0.0 0.0 0.0</rateOffset>
       <rateDrift>0.0 0.0 0.0</rateDrift>
-      <rateDriftFrequency>0.00027 0.00027 0.000027</rateDriftFrequency>
+      <rateDriftFrequency>0.0 0.0 0.0</rateDriftFrequency>
       <rateGaussianNoise>0.0 0.0 0.0</rateGaussianNoise>
       <yawOffset>0.0</yawOffset>
       <yawDrift>0.0</yawDrift>
-      <yawDriftFrequency>0.00027</yawDriftFrequency>
+      <yawDriftFrequency>0.0</yawDriftFrequency>
       <yawGaussianNoise>0.0</yawGaussianNoise>
     </plugin>
   </gazebo>
