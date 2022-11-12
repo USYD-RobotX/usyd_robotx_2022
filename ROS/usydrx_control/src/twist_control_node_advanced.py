@@ -167,10 +167,11 @@ class WAMVController():
 
         while not rospy.is_shutdown():
             desired_angle_rate = self.desired_twist.angular.z
+            # desired_angle_rate = 0.4
 
             desired_vel = (self.desired_twist.linear.x, self.desired_twist.linear.y)
 
-            # desired_vel = (0.0, 0.0)
+            # desired_vel = (0.0, 1.0)
 
             current_vel = (self.twist.linear.x, self.twist.linear.y)
             
@@ -178,9 +179,9 @@ class WAMVController():
 
             angle_pid.setpoint = desired_angle_rate
 
-            # self.time_data.append(time.perf_counter() - st)
+            self.time_data.append(time.perf_counter() - st)
 
-            # self.vel_data.append(current_rot_speed)
+            self.vel_data.append((self.twist.linear.x, self.twist.linear.y, current_rot_speed))
 
             u_d = desired_vel[0]
             v_d = desired_vel[1]
@@ -258,6 +259,11 @@ class WAMVController():
             # self.left_rear_controller.thrust_xy(x, y)
             rate.sleep()
         
+            # if time.perf_counter() -st > 10:
+            #     print(self.time_data)
+            #     print(self.vel_data)
+            #     return
+
             # if time.perf_counter() -st > 10:
             #     print(self.time_data)
             #     print(self.vel_data)

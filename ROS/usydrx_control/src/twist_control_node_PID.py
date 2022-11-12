@@ -261,7 +261,6 @@ class WAMVController():
             # print(_x, _y, v)
             # print(desired_angle_rate - current_rot_speed)
             # self.command_thrust(_x, _y, v)
-            self.command_thrust(_x, _y, v)
 
             
             # _y = 0
