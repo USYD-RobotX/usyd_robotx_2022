@@ -6,14 +6,14 @@ import operator
 import socket
 import rospy
 import time
-HOST = "127.0.0.1"  # The server's hostname or IP address
+HOST = "robot.server"  # The server's hostname or IP address
 PORT = 12345  # The port used by the server
 
 
 class HeartbeatClient:
     
     def __init__(self) -> None:
-        rospy.init_node("heartbeat")
+        # rospy.init_node("heartbeat")
 
         self.latitude = 0.0
         self.longitude = 0.0
@@ -86,6 +86,8 @@ class HeartbeatClient:
 
 
     def start(self):
+
+        st = time.time()
         while True:
             try:
                 
@@ -97,6 +99,9 @@ class HeartbeatClient:
 
                         s.sendall(msg.encode())
                         time.sleep(1.0)
+
+                        if time.time() - st > 10:
+                            self.system_mode = 2
 
             except {ConnectionError, BrokenPipeError} as e:
                 print(f"Error {e}")
