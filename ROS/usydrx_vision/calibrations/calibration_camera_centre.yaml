@@ -1,6 +1,6 @@
 image_width: 1200
 image_height: 720
-camera_name: camera_centre
+camera_name: /wamv/front_camera_link_optical
 camera_matrix:
   rows: 3
   cols: 3

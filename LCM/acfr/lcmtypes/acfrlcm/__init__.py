@@ -60,3 +60,4 @@ from .auv_image_stats_t import auv_image_stats_t
 from .vesc_command_t import vesc_command_t
 from .vesc_status_t import vesc_status_t
 from .auv_status_short_lat_long_t import auv_status_short_lat_long_t
+from .wam_v_thruster_alloc_t import wam_v_thruster_alloc_t

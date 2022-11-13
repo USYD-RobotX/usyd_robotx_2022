@@ -4,6 +4,8 @@
 
     <include file="$(find usydrx_lcm_bridge)/launch/localisation.launch">
     </include>
+    <node  name="cmds_pub" pkg="usydrx_lcm_bridge" type="control_cmds_to_lcm.py"/>
+
 </launch>
 
 

@@ -233,11 +233,11 @@ class WAMVController():
 
         while not rospy.is_shutdown():
             desired_angle_rate = self.desired_twist.angular.z
-            desired_angle_rate = 0.5
+            # desired_angle_rate = 0.5
 
             desired_vel = (self.desired_twist.linear.x, self.desired_twist.linear.y)
 
-            desired_vel = (0, 0.0)
+            # desired_vel = (0, 0.0)
 
             current_vel = (self.twist.linear.x, self.twist.linear.y)
             
@@ -288,10 +288,6 @@ class WAMVController():
             # self.left_rear_controller.thrust_xy(x, y)
             r.sleep()
 
-            if time.perf_counter() -st > 10:
-                print(self.time_data)
-                print(self.vel_data)
-                return
 
     @staticmethod
     def get_rot_matrix(theta):

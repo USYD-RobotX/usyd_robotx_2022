@@ -3,7 +3,7 @@
   <arg name="name" default="camera_right" doc="The name of the camera"/>
   <arg name="ip" default="172.16.154.244" doc="The IP for the camera to connect to"/>
   <arg name="guid" default="" doc="The GUID for the camera to connect to"/>
-  <arg name="frame_id" default="$/wamv/right_camera_link_optical" doc="The frame id of the camera"/>
+  <arg name="frame_id" default="$(arg name)" doc="The frame id of the camera"/>
   <arg name="use_measurement_time" default="false" doc="Use the measurement time from the camera"/>
   <arg name="ptp_offset" default="-37" doc="Offset to add to the timestamp from the camera (s).
     Useful for converting from TAI to UTC time. Only applies if use_measurement_time is true"/>
@@ -23,16 +23,16 @@
   <arg name="trigger_selector" default="FrameStart"/>
   <arg name="trigger_activation" default="RisingEdge"/>
   <arg name="trigger_delay" default="0.0"/>
-  <!-- Exposure -->
-  <arg name="exposure" default="700"/>
+   <!-- Exposure -->
+  <arg name="exposure" default="1500"/>
   <arg name="exposure_auto" default="Continuous"/>
   <arg name="exposure_auto_alg" default="FitRange"/>
   <arg name="exposure_auto_tol" default="5"/>
-  <arg name="exposure_auto_max" default="700"/>
-  <arg name="exposure_auto_min" default="700"/>
-  <arg name="exposure_auto_outliers" default="800"/>
-  <arg name="exposure_auto_rate" default="700"/>
-  <arg name="exposure_auto_target" default="700"/>
+  <arg name="exposure_auto_max" default="1500"/>
+  <arg name="exposure_auto_min" default="1500"/>
+  <arg name="exposure_auto_outliers" default="1500"/>
+  <arg name="exposure_auto_rate" default="1500"/>
+  <arg name="exposure_auto_target" default="1500"/>
   <!-- Gain -->
   <arg name="gain" default="0"/>
   <arg name="gain_auto" default="Continuous"/>
