@@ -11,9 +11,9 @@
         <param name="~offset_x" value="0.0"/>
         <param name="~offset_y" value="200.0"/>
         <param name="~increment" value="20"/>
-        <param name="~decrement" value="1"/>
-        <param name="~clr_range" value="40.5"/>
-        <param name="~min_range" value="4"/>
+        <param name="~decrement" value="3"/>
+        <param name="~clr_range" value="30"/>
+        <param name="~min_range" value="15"/>
 
         <remap from="odom" to="/wamv/odom"/>
 

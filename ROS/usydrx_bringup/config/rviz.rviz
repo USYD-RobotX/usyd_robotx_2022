@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /AerialMapDisplay1
         - /Map1
-        - /Map1/Status1
       Splitter Ratio: 0.5
     Tree Height: 265
   - Class: rviz/Selection
@@ -231,6 +230,8 @@ Visualization Manager:
         All Enabled: true
         map:
           Value: true
+        novatel:
+          Value: true
         odom:
           Value: true
         utm:
@@ -297,6 +298,8 @@ Visualization Manager:
           Value: true
         wamv/right_rear_propeller_link:
           Value: true
+        xsens_imu:
+          Value: true
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
@@ -306,54 +309,57 @@ Visualization Manager:
       Tree:
         map:
           wamv/odom:
-            utm:
-              {}
-            wamv/base_link:
-              wamv/cpu_cases_link:
+            odom:
+              utm:
                 {}
-              wamv/dummy_link:
-                {}
-              wamv/front_camera_post_link:
-                wamv/front_camera_post_arm_link:
-                  wamv/front_camera_link:
-                    wamv/front_camera_link_optical:
-                      {}
-              wamv/gps_wamv_link:
-                {}
-              wamv/imu_wamv_link:
-                {}
-              wamv/left_battery_link:
-                {}
-              wamv/left_camera_post_link:
-                wamv/left_camera_post_arm_link:
-                  wamv/left_camera_link:
-                    wamv/left_camera_link_optical:
-                      {}
-              wamv/left_front_engine_link:
-                wamv/left_front_propeller_link:
+              wamv/base_link:
+                novatel:
                   {}
-              wamv/left_rear_engine_link:
-                wamv/left_rear_propeller_link:
+                wamv/cpu_cases_link:
                   {}
-              wamv/lidar_wamv_front_post_link:
-                wamv/lidar_wamv_front_post_arm_link:
-                  wamv/lidar_wamv_front_link:
+                wamv/dummy_link:
+                  {}
+                wamv/front_camera_post_link:
+                  wamv/front_camera_post_arm_link:
+                    wamv/front_camera_link:
+                      wamv/front_camera_link_optical:
+                        {}
+                wamv/gps_wamv_link:
+                  {}
+                wamv/imu_wamv_link:
+                  {}
+                wamv/left_battery_link:
+                  {}
+                wamv/left_camera_post_link:
+                  wamv/left_camera_post_arm_link:
+                    wamv/left_camera_link:
+                      wamv/left_camera_link_optical:
+                        {}
+                wamv/left_front_engine_link:
+                  wamv/left_front_propeller_link:
                     {}
-              wamv/right_battery_link:
-                {}
-              wamv/right_camera_post_link:
-                wamv/right_camera_post_arm_link:
-                  wamv/right_camera_link:
-                    wamv/right_camera_link_optical:
+                wamv/left_rear_engine_link:
+                  wamv/left_rear_propeller_link:
+                    {}
+                wamv/lidar_wamv_front_post_link:
+                  wamv/lidar_wamv_front_post_arm_link:
+                    wamv/lidar_wamv_front_link:
                       {}
-              wamv/right_front_engine_link:
-                wamv/right_front_propeller_link:
+                wamv/right_battery_link:
                   {}
-              wamv/right_rear_engine_link:
-                wamv/right_rear_propeller_link:
+                wamv/right_camera_post_link:
+                  wamv/right_camera_post_arm_link:
+                    wamv/right_camera_link:
+                      wamv/right_camera_link_optical:
+                        {}
+                wamv/right_front_engine_link:
+                  wamv/right_front_propeller_link:
+                    {}
+                wamv/right_rear_engine_link:
+                  wamv/right_rear_propeller_link:
+                    {}
+                xsens_imu:
                   {}
-        odom:
-          {}
       Update Interval: 0
       Value: true
     - Alpha: 0.5
@@ -365,7 +371,7 @@ Visualization Manager:
       Map transform type: NavSatFix Messages and Map Frame
       Name: AerialMapDisplay
       Object URI: https://b.tile.openstreetmap.org/{z}/{x}/{y}.png
-      Topic: /wamv/sensors/gps/gps/fix
+      Topic: /fix
       UTM Frame: utm
       UTM Zone: -1
       Value: true
@@ -551,7 +557,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 716.380126953125
+      Distance: 15.735193252563477
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -559,17 +565,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -313.10601806640625
-        Y: 233.48568725585938
-        Z: -97.9084243774414
+        X: 0
+        Y: 0
+        Z: 0
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.0253987312316895
+      Pitch: 0.6303983330726624
       Target Frame: wamv/base_link
-      Yaw: 4.691763877868652
+      Yaw: 4.823581218719482
     Saved:
       - Class: rviz/Orbit
         Distance: 48.64983367919922
