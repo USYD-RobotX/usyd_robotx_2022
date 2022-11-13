@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>    
+	<include file="$(find usydrx_bringup)/launch/bringup_sim_with_mapping.launch"/>
+	<include file="$(find usydrx_navigation)/launch/rx_object_server.launch"/>
+
+	<node name="object_visualiser" pkg="usydrx_navigation" type="object_to_visualisation.py" output="screen">
+        <remap from="/wamv/classified_objects" to="/wamv/unclassified_objects"/>
+    </node>
+
+	<include file="$(find usydrx_control)/launch/control_with_path_following.launch"/>
+
+	<node ns="wamv" pkg="usydrx_control" type="pose_stamped_to_path.py" name="goal_to_path_script" output="screen"/>
+
+</launch>

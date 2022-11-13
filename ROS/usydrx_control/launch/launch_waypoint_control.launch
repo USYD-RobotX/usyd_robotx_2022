@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+ 	<include file="$(find usydrx_control)/launch/launch_control.launch"/>
+    
+    <!-- simple  path follow (straight line) -->
+    <!-- <node ns="wamv" pkg="usydrx_control" type="pose_stamped_to_path.py" name="goal_to_path_script" output="screen"/> -->
+    <node name="pose_remap" pkg="topic_tools" type="transform" args="move_base_simple/goal wamv/desired_pose geometry_msgs/Pose 'm.pose'"/>
+
+
+</launch>
+
+

@@ -58,5 +58,5 @@
 
   <!-- <node name="map_relay" pkg="topic_tools" type="relay" args="wamv/odom map"/> -->
 
-  <node name="map_tf_static" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 map wamv/odom 100"/>
+  <node name="map_tf_static" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 map wamv/odom 1000"/>
 </launch>

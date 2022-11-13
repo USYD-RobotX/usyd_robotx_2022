@@ -55,7 +55,36 @@ class WAMVController():
         self.debug_pub = rospy.Publisher("debug", Float32, queue_size=10)
         self.time_data = []
         self.vel_data = []
+
+        x = np.arange(501)/500
+        A = 0.01
+        K = 59.82
+        B = 5.0
+        v = 0.38
+        C = 0.56
+        M = 0.28
+        T = (A + (K-A)/np.power(C+np.exp(-B*(x-M)),1/v) ) / 250
+        self.fwd_thrust_table = list(zip(list(x), list(T)))
+
+        x = np.arange(501)/-500 
+        A = -199.13
+        K = -0.09
+        B = 8.84
+        v = 5.34
+        C = 0.99
+        M = -0.57
+        T = (A + (K-A)/np.power(C+np.exp(-B*(x-M)),1/v) ) / 100
+
+        self.back_thrust_table = list(zip(list(x), list(T)))
+
+        # print(self.back_thrust_table)
+
         self.angular_controller()
+
+
+        fwd_thrust_table = []
+
+
 
     def control_shutdown(self, cb):
         print("SHUTTING DOWN")
@@ -90,6 +119,8 @@ class WAMVController():
         self.desired_twist = cmd_vel
 
     def command_thrust(self, fx, fy, T):
+
+        # print(fx, fy, T)
         
         d1 = 1.0027135
         d2 = 1.2
@@ -157,7 +188,7 @@ class WAMVController():
         else: 
             f_fl = 0
         if abs(thrusts[2,0]) > min_cap:
-            f_fr = thrusts[2,0]/2
+            f_fr = -thrusts[2,0]/2
         else: 
             f_fr = 0
         
@@ -165,35 +196,66 @@ class WAMVController():
         # f_fl = thrusts[2,0]
         # f_fr = thrusts[3,0]
 
-        print(f"{f_fr:.2f}, {f_fl:.2f}, {f_br:.2f}, {f_bl:.2f}")
+        # print(f"{f_fr:.2f}, {f_fl:.2f}, {f_br:.2f}, {f_bl:.2f}")
 
     
 
-        
-        self.right_front_pub.publish(self.linearise_thrust_bow(f_fr))
-        self.left_front_pub.publish(self.linearise_thrust_bow(f_fl))
-        self.right_rear_pub.publish(self.linearise_thrust(f_br))
-        self.left_rear_pub.publish(self.linearise_thrust(f_bl))
+        fr = self.linearise_thrust_bow(f_fr)
+        fl = self.linearise_thrust_bow(f_fl)
+        br = self.linearise_thrust_bow(f_br)
+        bl = self.linearise_thrust_bow(f_bl)
+
+        # print(f"{fr:.2f}, {fl:.2f}, {br:.2f}, {bl:.2f}")
+
+        self.right_front_pub.publish(fr)
+        self.left_front_pub.publish(fl)
+        self.right_rear_pub.publish(br)
+        self.left_rear_pub.publish(bl)
         pass
 
-    def linearise_thrust(self, val):
+    def linearise_thrust(self, thrust):
         
-        val = val/250
+        # thrust = val/250
         max_thrust = 250
         min_thrust = -130
-        if val > 0:
-            return val
-        else:
-            return  max(-1, min(1, val * abs(max_thrust)/abs(min_thrust)))
+        # if val > 0:
+        #     return val
+        # else:
+        #     return  max(-1, min(1, val * abs(max_thrust)/abs(min_thrust)))
+        cmd = self.linearise(thrust, max_thrust, min_thrust)
+        return max(-1, min(1, cmd))
 
-    def linearise_thrust_bow(self, val):
-        val = val/250
-        max_thrust = 100
+
+    def linearise_thrust_bow(self, thrust):
+        # val = val/125
+        max_thrust = 125
         min_thrust = -70
-        if val > 0:
-            return val
+
+        cmd = self.linearise(thrust, max_thrust, min_thrust)
+
+
+        return max(-1, min(1, cmd))
+
+        # if val > 0:
+        #     return val
+        # else:
+        #     return  max(-1, min(1, val * abs(max_thrust)/abs(min_thrust)))
+
+    def linearise(self, thrust, max_thrust, min_thrust):
+
+        if thrust > 0:
+            _thrust = thrust/max_thrust
+            for x, t_thrust in self.fwd_thrust_table:
+                if t_thrust == self.fwd_thrust_table[-1][1] or t_thrust > _thrust:
+                    return x
+        elif thrust < 0:
+            _thrust = -thrust/min_thrust
+
+            for x, t_thrust in self.back_thrust_table:
+                if t_thrust == self.back_thrust_table[-1][1] or t_thrust < _thrust:
+                    return x 
         else:
-            return  max(-1, min(1, val * abs(max_thrust)/abs(min_thrust)))
+            return 0
 
 
     def angular_controller(self):
@@ -220,9 +282,11 @@ class WAMVController():
 
             desired_vel = (self.desired_twist.linear.x, self.desired_twist.linear.y)
 
-            desired_vel = (0.0, 0.4)
+            # desired_vel = (0.0, 0.4)
 
             current_vel = (self.twist.linear.x, self.twist.linear.y)
+
+            # print(current_vel)
             
             current_rot_speed = self.twist.angular.z
 
@@ -276,8 +340,24 @@ class WAMVController():
             y_pid.setpoint = desired_vel[1]
             _y = y_pid(current_vel[1])
             # self.debug_pub.publish(_y/400)
-            print("what,",_x, _y, v)
+            # print("what,",_x, _y, v)
             # print(desired_angle_rate - current_rot_speed)
+
+            
+            if abs(desired_vel[0]) <0.01:
+                if abs(current_vel[0]) < 0.4:
+                    _x = 0
+                    x_pid.reset()
+
+            if abs(desired_vel[1]) <0.01:
+                if abs(current_vel[1]) < 0.4:
+                    _y = 0
+                    y_pid.reset()
+            if abs(desired_angle_rate) <0.01:
+                if abs(current_rot_speed) < 0.1:
+                    v = 0
+                    angle_pid.reset()
+
             self.command_thrust(_x, _y, v)
             # print(F_x, F_y, T_z)
             # self.command_thrust(F_x, F_y, T_z)

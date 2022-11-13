@@ -498,8 +498,8 @@
         <!-- Optional Parameters -->
         <mappingType>1</mappingType>
         <maxCmd>1.0</maxCmd>
-        <maxForceFwd>250.0</maxForceFwd>
-        <maxForceRev>-100.0</maxForceRev>
+        <maxForceFwd>125.0</maxForceFwd>
+        <maxForceRev>-70.0</maxForceRev>
         <maxAngle>1.5707963267948966</maxAngle>
       </thruster>
       <thruster>
@@ -513,8 +513,8 @@
         <!-- Optional Parameters -->
         <mappingType>1</mappingType>
         <maxCmd>1.0</maxCmd>
-        <maxForceFwd>250.0</maxForceFwd>
-        <maxForceRev>-100.0</maxForceRev>
+        <maxForceFwd>125.0</maxForceFwd>
+        <maxForceRev>-70.0</maxForceRev>
         <maxAngle>1.5707963267948966</maxAngle>
       </thruster>
     </plugin>

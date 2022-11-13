@@ -17,6 +17,13 @@
 
   <node pkg="tf2_ros" type="static_transform_publisher" name="imu_link" args="0 0 -1.4 0 0 0  wamv/base_link xsens_imu" />
   <node pkg="tf2_ros" type="static_transform_publisher" name="novatel_link" args="0 0 -1.4 0 0 0   wamv/base_link novatel" />
+
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="wamv_odom_pub" args="0 0 0 0 0 0   wamv/odom odom" />
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="wamv_map_pub" args="0 0 0 0 0 0   map wamv/odom" />
+
+
   <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="nav_link" args="0 0 -1.4 0 0 0  nav_base_link wamv/base_link" /> -->
 <!-- 
     <node pkg="usydrx_lcm_bridge" type="pub_initial_pose.py" clear_params="true" output="screen" name="init_pose">

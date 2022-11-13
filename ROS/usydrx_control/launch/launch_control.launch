@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <node  name="twist_control_node" pkg="usydrx_control" type="twist_control_node_advanced.py" output="screen"/>
+    <node ns="wamv" pkg="usydrx_control" type="cmd_pos_to_cmd_vel.py" name="pos_to_twist" output="screen"/>
+    <!-- <node ns="wamv" pkg="usydrx_control" type="path_follower.py" name="path_follower" output="screen"/> -->
+
+    <!-- simple  path follow (straight line) -->
+    <!-- <node ns="wamv" pkg="usydrx_control" type="pose_stamped_to_path.py" name="goal_to_path_script" output="screen"/>
+    <node name="pose_remap" pkg="topic_tools" type="transform" args="move_base_simple/goal wamv/desired_pose geometry_msgs/Pose 'm.pose'"/> -->
+
+
+</launch>
+
+

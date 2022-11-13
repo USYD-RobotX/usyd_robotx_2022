@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>    
+	<include file="$(find usydrx_sim_bringup)/launch/bringup_sim_core.launch"/>
+	<include file="$(find usydrx_navigation)/launch/rx_mapping.launch"/>
+</launch>

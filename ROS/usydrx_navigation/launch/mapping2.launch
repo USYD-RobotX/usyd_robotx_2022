@@ -3,7 +3,7 @@
 
     <arg name="vehicle" default="wamv" />
     
-    <node pkg="tf" type="static_transform_publisher" name="wamv_odom_tf_broadcaster" args="0 0 0 0 0 0 odom wamv/odom  1000" />
+    <!-- <node pkg="tf" type="static_transform_publisher" name="wamv_odom_tf_broadcaster" args="0 0 0 0 0 0 odom wamv/odom  1000" /> -->
 
     <node pkg="usydrx_navigation" type="mapping" name="mapping" output="screen">
         <param name="~width" value="1024"/>
