@@ -31,7 +31,6 @@
 
     <include file="$(find usydrx_sim_bringup)/launch/localisation.launch"/>
 
-    <node pkg="tf2_ros" type="static_transform_publisher" name="map_tf" args="483676.073 4422149.429 -35.551 0 0 0 map wamv/odom" />
 
 
     <!-- <include file="$(find usydrx_sim_bringup)/launch/rviz_vrx.launch"/> -->

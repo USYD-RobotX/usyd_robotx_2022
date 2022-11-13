@@ -7,4 +7,6 @@
   <arg name="rviz_config" default="$(find usydrx_bringup)/config/basic_rviz.rviz" />
   <node pkg="rviz" type="rviz"
         name="wamv_visualization" args="-d $(arg rviz_config)" />
+
+        
 </launch>
