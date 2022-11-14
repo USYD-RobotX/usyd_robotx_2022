@@ -222,7 +222,7 @@ class WAMVController():
         
         # thrust = val/250
         max_thrust = 500
-        min_thrust = -260
+        min_thrust = -400
         # if val > 0:
         #     return val
         # else:
@@ -234,7 +234,7 @@ class WAMVController():
     def linearise_thrust_bow(self, thrust):
         # val = val/125
         max_thrust = 300
-        min_thrust = -200
+        min_thrust = -260
 
         cmd = self.linearise(thrust, max_thrust, min_thrust)
 
@@ -273,11 +273,11 @@ class WAMVController():
 
         x_pid = PID(50.0, 0, 0, setpoint=0)
         x_pid.sample_time = 1/freq
-        x_pid.output_limits = (-500, 500)
+        x_pid.output_limits = (-1000, 1000)
         
         y_pid = PID(20.0, 0, 0, setpoint=0)
         y_pid.sample_time = 1/freq
-        y_pid.output_limits = (-500, 500)
+        y_pid.output_limits = (-1000, 1000)
         st = time.perf_counter()
 
 

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!-- Example of launch rviz with a custom rviz config to have selected topics preloaded -->
+<launch>
+  <!-- Publishes static joint transforms (lidar, cameras, etc) to /tf -->
+  
+  <param name="/use_sim_time" value="true" />
+
+  <arg name="rviz_config" default="$(find usydrx_bringup)/config/rviz.rviz" />
+  <node pkg="rviz" type="rviz"
+        name="wamv_visualization" args="-d $(arg rviz_config)">
+
+        </node>
+
+    <node name="pose_remap" pkg="topic_tools" type="transform" args="move_base_simple/goal wamv/desired_pose geometry_msgs/Pose 'm.pose'" launch-prefix="bash -c 'sleep 5; $0 $@' " output="screen"/>
+
+
+</launch>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>    
+	<include file="$(find usydrx_sim_bringup)/launch/bringup_sim_core.launch"/>
+	<include file="$(find usydrx_control)/launch/control_with_path_following.launch"/>
+
+
+	<include file="$(find usydrx_bringup)/launch/classifier.launch"/>
+	
+    </node>
+</launch>

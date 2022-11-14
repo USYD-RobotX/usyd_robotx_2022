@@ -3,10 +3,12 @@
 	<include file="$(find usydrx_bringup)/launch/bringup_sim_with_mapping.launch"/>
 	<include file="$(find usydrx_navigation)/launch/rx_object_server.launch"/>
 
+
 	<node name="object_visualiser" pkg="usydrx_navigation" type="object_to_visualisation.py" output="screen">
-        <remap from="/wamv/classified_objects" to="/wamv/unclassified_objects"/>
+        <!-- <remap from="/wamv/classified_objects" to="/wamv/unclassified_objects"/> -->
     </node>
 
+	<node pkg="usydrx_vision" type="object_classifier.py" name="object_classifier" output="screen"/>
 
 	<include file="$(find usydrx_control)/launch/control_with_path_following.launch"/>
 

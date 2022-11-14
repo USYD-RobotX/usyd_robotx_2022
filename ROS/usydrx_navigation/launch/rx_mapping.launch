@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>    
-	<!-- <include file="$(find usydrx_navigation)/launch/map_server.launch"/> -->
+	<include file="$(find usydrx_navigation)/launch/map_server.launch"/>
 	<include file="$(find usydrx_navigation)/launch/point2laser_rxd2.launch"/>
 	<!-- <include file="$(find usyd_vrx_navigation)/launch/laserscan_multi_merger.launch"/> -->
 	<include file="$(find usydrx_navigation)/launch/mapping2.launch"/>

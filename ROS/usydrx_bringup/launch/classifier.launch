@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>    
+	<include file="$(find usydrx_navigation)/launch/rx_mapping.launch"/>
+	<include file="$(find usydrx_navigation)/launch/global_planner.launch"/>
+	<include file="$(find usydrx_navigation)/launch/rx_object_server.launch"/>
+	<node pkg="usydrx_vision" type="object_classifier.py" name="object_classifier" output="screen"/>
+	<node name="object_visualiser" pkg="usydrx_navigation" type="object_to_visualisation.py" output="screen">
+    </node>
+</launch>

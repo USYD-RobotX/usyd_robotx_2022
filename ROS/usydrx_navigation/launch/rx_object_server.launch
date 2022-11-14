@@ -4,9 +4,9 @@
 
     <!-- <node pkg="usyd_vrx_vision" type="object_classifier.py" name="object_classifier" output="screen"/> -->
 
-    <node name="object_visualiser" pkg="usydrx_navigation" type="object_to_visualisation.py" output="screen">
+    <!-- <node name="object_visualiser" pkg="usydrx_navigation" type="object_to_visualisation.py" output="screen">
         <remap from="/wamv/classified_objects" to="/wamv/unclassified_objects"/>
-    </node>
+    </node> -->
 </launch>
 
  

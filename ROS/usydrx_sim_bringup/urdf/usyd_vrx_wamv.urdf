@@ -468,8 +468,8 @@
         <!-- Optional Parameters -->
         <mappingType>1</mappingType>
         <maxCmd>1.0</maxCmd>
-        <maxForceFwd>250.0</maxForceFwd>
-        <maxForceRev>-100.0</maxForceRev>
+        <maxForceFwd>700.0</maxForceFwd>
+        <maxForceRev>-500.0</maxForceRev>
         <maxAngle>1.5707963267948966</maxAngle>
       </thruster>
       <thruster>
@@ -483,8 +483,8 @@
         <!-- Optional Parameters -->
         <mappingType>1</mappingType>
         <maxCmd>1.0</maxCmd>
-        <maxForceFwd>250.0</maxForceFwd>
-        <maxForceRev>-100.0</maxForceRev>
+        <maxForceFwd>700.0</maxForceFwd>
+        <maxForceRev>-500.0</maxForceRev>
         <maxAngle>1.5707963267948966</maxAngle>
       </thruster>
       <thruster>
@@ -498,8 +498,8 @@
         <!-- Optional Parameters -->
         <mappingType>1</mappingType>
         <maxCmd>1.0</maxCmd>
-        <maxForceFwd>125.0</maxForceFwd>
-        <maxForceRev>-70.0</maxForceRev>
+        <maxForceFwd>400.0</maxForceFwd>
+        <maxForceRev>-300.0</maxForceRev>
         <maxAngle>1.5707963267948966</maxAngle>
       </thruster>
       <thruster>
@@ -513,8 +513,8 @@
         <!-- Optional Parameters -->
         <mappingType>1</mappingType>
         <maxCmd>1.0</maxCmd>
-        <maxForceFwd>125.0</maxForceFwd>
-        <maxForceRev>-70.0</maxForceRev>
+        <maxForceFwd>400.0</maxForceFwd>
+        <maxForceRev>-300.0</maxForceRev>
         <maxAngle>1.5707963267948966</maxAngle>
       </thruster>
     </plugin>
@@ -634,8 +634,8 @@
   </joint>
   <!-- Sensor post arm to camera joint -->
   <joint name="wamv/front_camera_post_arm_to_front_camera_joint" type="fixed">
-    <origin rpy="0 0.0 0.0" xyz="0.02 0 0.027"/>
-    <parent link="wamv/front_camera_post_arm_link"/>
+    <origin rpy="-0.009 0.189 -0.041" xyz="0.941 -0.005 1.426"/>
+    <parent link="wamv/base_link"/>
     <child link="wamv/front_camera_link"/>
   </joint>
   <!-- Camera to optical frame joint.  This is oriented to convert between ENU
@@ -650,10 +650,10 @@
     <sensor name="front_camera_sensor" type="camera">
       <update_rate>30.0</update_rate>
       <camera name="front_camera_camera">
-        <horizontal_fov>1.3962634</horizontal_fov>
+        <horizontal_fov>1.2217304763960306</horizontal_fov>
         <image>
-          <width>1280</width>
-          <height>720</height>
+          <width>1936</width>
+          <height>1216</height>
           <format>R8G8B8</format>
         </image>
         <clip>
@@ -772,8 +772,8 @@
   </joint>
   <!-- Sensor post arm to camera joint -->
   <joint name="wamv/right_camera_post_arm_to_right_camera_joint" type="fixed">
-    <origin rpy="0 0.0 1.0471975511965976" xyz="0.02 0 0.027"/>
-    <parent link="wamv/right_camera_post_arm_link"/>
+    <origin rpy="-0.171 0.083 -1.117" xyz="0.878 -0.103 1.438"/>
+    <parent link="wamv/base_link"/>
     <child link="wamv/right_camera_link"/>
   </joint>
   <!-- Camera to optical frame joint.  This is oriented to convert between ENU
@@ -788,10 +788,10 @@
     <sensor name="right_camera_sensor" type="camera">
       <update_rate>30.0</update_rate>
       <camera name="right_camera_camera">
-        <horizontal_fov>1.3962634</horizontal_fov>
+        <horizontal_fov>1.2217304763960306</horizontal_fov>
         <image>
-          <width>1280</width>
-          <height>720</height>
+          <width>1936</width>
+          <height>1216</height>
           <format>R8G8B8</format>
         </image>
         <clip>
@@ -910,8 +910,8 @@
   </joint>
   <!-- Sensor post arm to camera joint -->
   <joint name="wamv/left_camera_post_arm_to_left_camera_joint" type="fixed">
-    <origin rpy="0 0.0 -1.0471975511965976" xyz="0.02 0 0.027"/>
-    <parent link="wamv/left_camera_post_arm_link"/>
+    <origin rpy="0.156 0.108 0.979" xyz="0.892 0.095 1.435"/>
+    <parent link="wamv/base_link"/>
     <child link="wamv/left_camera_link"/>
   </joint>
   <!-- Camera to optical frame joint.  This is oriented to convert between ENU
@@ -926,10 +926,10 @@
     <sensor name="left_camera_sensor" type="camera">
       <update_rate>30.0</update_rate>
       <camera name="left_camera_camera">
-        <horizontal_fov>1.3962634</horizontal_fov>
+        <horizontal_fov>1.2217304763960306</horizontal_fov>
         <image>
-          <width>1280</width>
-          <height>720</height>
+          <width>1936</width>
+          <height>1216</height>
           <format>R8G8B8</format>
         </image>
         <clip>
