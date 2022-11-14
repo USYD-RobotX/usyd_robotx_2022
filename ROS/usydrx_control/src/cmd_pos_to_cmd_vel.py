@@ -68,8 +68,8 @@ class PositionController():
     def position_control_loop(self, freq=50):
 
         r = rospy.Rate(freq)
-        max_vel = 3  # m/s
-        max_rot = 1  # rot/s
+        max_vel = 1  # m/s
+        max_rot = 0.4  # rot/s
 
 
         angle_pid = PID(0.3, 0.00, 0.2, setpoint=0)
@@ -94,7 +94,7 @@ class PositionController():
         pos_data = []
         while not rospy.is_shutdown():
             if self.current_pose is None or self.desired_pose is None:
-                r.sleep()
+                time.sleep(1/20)
                 continue
             
             pass
@@ -155,8 +155,14 @@ class PositionController():
 
             # print(x_vel, y_vel)
             dist_thresh = 0.2
-            angle_thresh = 0.1
-            if abs(diff_xyz[0]) < dist_thresh and abs(diff_xyz[1]) < dist_thresh and abs(desired_orient_z-curr_orient_z) < angle_thresh:
+            angle_thresh = 0.05
+            if abs(diff_xyz[0]) < dist_thresh and abs(diff_xyz[1]) < dist_thresh and abs(difference_between_angles(desired_orient_z,curr_orient_z)) < angle_thresh:
+                
+                print(diff_xyz[0])
+
+                print(difference_between_angles(desired_orient_z,curr_orient_z))
+
+
                 cmd_vel = Twist()
                 cmd_vel.linear.x = 0
 
@@ -174,8 +180,9 @@ class PositionController():
 
                 cmd_vel.angular.z = angular_vel_z
 
+                # print("Cmd vel", cmd_vel)
                 self.cmd_vel_pub.publish(cmd_vel)
-                r.sleep()
+            time.sleep(1/20)
 
 
             # if time.perf_counter() -st > 20:

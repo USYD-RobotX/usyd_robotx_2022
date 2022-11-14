@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from turtle import pos
 import rospy
 
 from std_msgs.msg import Float32, Header
@@ -23,11 +22,11 @@ class PoseStampedToPath:
 
         rospy.init_node('pose_stamped_to_path', anonymous=True)
 
-        self.path_pub = rospy.Publisher("desired_path", Path, queue_size=10)
+        self.path_pub = rospy.Publisher("/wamv/desired_path", Path, queue_size=10)
 
         rospy.Subscriber("/move_base_simple/goal", PoseStamped, self.pose_stamped_receive)
 
-        rospy.Subscriber("odom", Odometry, self.odom_receive)
+        rospy.Subscriber("/wamv/odom", Odometry, self.odom_receive)
 
 
     def odom_receive(self, odom: Odometry):
@@ -95,6 +94,7 @@ class PoseStampedToPath:
 
 
 if __name__ == "__main__":
+    print("Hello")
     
     pstp = PoseStampedToPath()
 

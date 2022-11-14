@@ -1,20 +1,26 @@
-image_width: 1200
-image_height: 720
-camera_name: /wamv/front_camera_link_optical
+image_width: 1936
+image_height: 1216
+camera_name: camera_centre
 camera_matrix:
   rows: 3
   cols: 3
-  data: [1384.677118037295, 0, 717.2568212740917, 0, 1383.366941715095, 497.7247518939914, 0, 0, 1]
+  data: [1334.27925,    0.     ,  958.62075,
+            0.     , 1333.90023,  535.94026,
+            0.     ,    0.     ,    1.     ]
 distortion_model: plumb_bob
 distortion_coefficients:
   rows: 1
   cols: 5
-  data: [-0.06364468063996172, 0.04712948562022587, 0.001851121576411599, 0.001189643011732145, 0]
+  data: [-0.103258, 0.089776, -0.001892, -0.002259, 0.000000]
 rectification_matrix:
   rows: 3
   cols: 3
-  data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+  data: [1., 0., 0.,
+         0., 1., 0.,
+         0., 0., 1.]
 projection_matrix:
   rows: 3
   cols: 4
-  data: [1367.185302734375, 0, 719.5771865127172, 0, 0, 1371.9873046875, 498.4004578953318, 0, 0, 0, 1, 0]
+  data: [1299.00098,    0.     ,  953.09673,    0.     ,
+            0.     , 1307.22339,  531.79441,    0.     ,
+            0.     ,    0.     ,    1.     ,    0.     ]

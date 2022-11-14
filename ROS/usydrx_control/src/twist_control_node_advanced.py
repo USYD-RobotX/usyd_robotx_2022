@@ -139,8 +139,8 @@ class WAMVController():
 
         thrusts = thrust_matrix_inv @ thrust_val
 
-        min_cap = 10
-        bow_min_cap = 10
+        min_cap = 0
+        bow_min_cap = 0
 
         f_b = thrusts[2,0]
 
@@ -180,7 +180,7 @@ class WAMVController():
         else: 
             f_bl = 0
         if abs(thrusts[1,0]) > min_cap:
-            f_br = thrusts[1,0]/2
+            f_br = thrusts[1,0]
         else: 
             f_br = 0
         if abs(thrusts[2,0]) > min_cap:
@@ -202,8 +202,8 @@ class WAMVController():
 
         fr = self.linearise_thrust_bow(f_fr)
         fl = self.linearise_thrust_bow(f_fl)
-        br = self.linearise_thrust_bow(f_br)
-        bl = self.linearise_thrust_bow(f_bl)
+        br = self.linearise_thrust(f_br)
+        bl = self.linearise_thrust(f_bl)
 
         # print(f"{fr:.2f}, {fl:.2f}, {br:.2f}, {bl:.2f}")
 
@@ -211,13 +211,18 @@ class WAMVController():
         self.left_front_pub.publish(fl)
         self.right_rear_pub.publish(br)
         self.left_rear_pub.publish(bl)
+
+        # self.right_front_pub.publish(f_fr)
+        # self.left_front_pub.publish(f_fl)
+        # self.right_rear_pub.publish(f_br)
+        # self.left_rear_pub.publish(f_bl)
         pass
 
     def linearise_thrust(self, thrust):
         
         # thrust = val/250
-        max_thrust = 250
-        min_thrust = -130
+        max_thrust = 500
+        min_thrust = -260
         # if val > 0:
         #     return val
         # else:
@@ -228,8 +233,8 @@ class WAMVController():
 
     def linearise_thrust_bow(self, thrust):
         # val = val/125
-        max_thrust = 125
-        min_thrust = -70
+        max_thrust = 300
+        min_thrust = -200
 
         cmd = self.linearise(thrust, max_thrust, min_thrust)
 
@@ -262,17 +267,17 @@ class WAMVController():
         freq = 30
         rate = rospy.Rate(freq)
 
-        angle_pid = PID(7000.0, 2000, 0.0, setpoint=0)
+        angle_pid = PID(300.0, 0, 0.0, setpoint=0)
         angle_pid.sample_time = 1/freq
         angle_pid.output_limits = (-10000, 10000)
 
-        x_pid = PID(200.0, 120, 5, setpoint=0)
+        x_pid = PID(50.0, 0, 0, setpoint=0)
         x_pid.sample_time = 1/freq
-        x_pid.output_limits = (-10000, 10000)
+        x_pid.output_limits = (-500, 500)
         
-        y_pid = PID(200.0, 120, 10, setpoint=0)
+        y_pid = PID(20.0, 0, 0, setpoint=0)
         y_pid.sample_time = 1/freq
-        y_pid.output_limits = (-10000, 10000)
+        y_pid.output_limits = (-500, 500)
         st = time.perf_counter()
 
 
@@ -345,20 +350,22 @@ class WAMVController():
 
             
             if abs(desired_vel[0]) <0.01:
-                if abs(current_vel[0]) < 0.4:
+                if abs(current_vel[0]) < 0.1:
                     _x = 0
                     x_pid.reset()
 
             if abs(desired_vel[1]) <0.01:
-                if abs(current_vel[1]) < 0.4:
+                if abs(current_vel[1]) < 0.1:
                     _y = 0
                     y_pid.reset()
             if abs(desired_angle_rate) <0.01:
                 if abs(current_rot_speed) < 0.1:
                     v = 0
                     angle_pid.reset()
-
+            print(f"Thrust: {_x:.2f}, {_y:.2f}, {v:.2f}")
             self.command_thrust(_x, _y, v)
+            print(f"After")
+
             # print(F_x, F_y, T_z)
             # self.command_thrust(F_x, F_y, T_z)
 
@@ -386,7 +393,7 @@ class WAMVController():
             # x = math.cos(theta) * v + _x 
             # y = math.sin(theta) * v + _y
             # self.left_rear_controller.thrust_xy(x, y)
-            rate.sleep()
+            time.sleep(1/30)
         
             # if time.perf_counter() -st > 10:
             #     print(self.time_data)

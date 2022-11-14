@@ -8,5 +8,7 @@
     </include>
     <include file="$(find usydrx_lcm_bridge)/launch/run_bridge.launch">
     </include>
+
+
     
 </launch>

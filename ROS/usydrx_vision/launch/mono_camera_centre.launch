@@ -49,15 +49,15 @@
   <arg name="whitebalance_auto_tol" default="5"/>
   <arg name="whitebalance_auto_rate" default="100"/>
   <!-- Binning and Decimation -->
-  <arg name="binning_x" default="1"/>
-  <arg name="binning_y" default="1"/>
+  <arg name="binning_x" default="2"/>
+  <arg name="binning_y" default="2"/>
   <arg name="decimation_x" default="1"/>
   <arg name="decimation_y" default="1"/>
   <!-- ROI -->
-  <arg name="width" default="1200"/>
-  <arg name="height" default="720"/>
-  <arg name="offset_x" default="248"/>
-  <arg name="offset_y" default="68"/>
+  <arg name="width" default="1936"/>
+  <arg name="height" default="1216"/>
+  <arg name="offset_x" default="0"/>
+  <arg name="offset_y" default="0"/>
   <!-- Pixel Format -->
   <!-- Pixel Format -->
   <arg name="pixel_format" default="BGR8Packed"/>

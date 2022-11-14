@@ -10,12 +10,14 @@ import lcm
 
 from acfrlcm import auv_acfr_nav_t
 from senlcm import xsens_t
+from senlcm import gpsd3_t
 
 import rospy
 
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import NavSatFix, Imu
 from std_msgs.msg import Header
+import math
 
 class NavDataBridge():
     
@@ -34,7 +36,9 @@ class NavDataBridge():
         
 
         self.lc = lcm.LCM()
-        subscription = self.lc.subscribe("WAMV.ACFR_NAV", self.lcm_nav_handler)
+        # subscription = self.lc.subscribe("WAMV.ACFR_NAV", self.lcm_nav_handler)
+
+        gpsd_sub = self.lc.subscribe("WAMV.GPSD_CLIENT", self.lcm_gps_handler)
         isub = self.lc.subscribe("WAMV.XSENS", self.xsens_handler)
 
     def xsens_handler(self, channel, data):
@@ -53,7 +57,7 @@ class NavDataBridge():
 
         imsg.angular_velocity.x = msg.gyr_y
         imsg.angular_velocity.y = msg.gyr_x
-        imsg.angular_velocity.z = -msg.gyr_y
+        imsg.angular_velocity.z = -msg.gyr_z
 
         imsg.linear_acceleration.x = msg.acc_y
         imsg.linear_acceleration.y = msg.acc_x
@@ -61,8 +65,42 @@ class NavDataBridge():
 
         self.imu_pub.publish(imsg)
 
+    prev_heading = 0
+    def lcm_gps_handler(self, channel, data):
+        msg = gpsd3_t.decode(data) 
+
+        dn = msg.ned.relPosN
+        de = msg.ned.relPosE
+
+        heading_enu = math.atan2(dn, de) - math.pi/2
+
+        if heading_enu == self.prev_heading:
+            return
+
+        self.prev_heading = heading_enu
+
+        imu_msg = Imu()
+        imu_msg.header.frame_id = "novatel"
+        imu_msg.header.stamp = rospy.Time.now()
+        q2 = Rotation.from_euler('xyz', [0., 0., heading_enu]).as_quat()
+        imu_msg.orientation.x = q2[0]
+        imu_msg.orientation.y = q2[1]
+        imu_msg.orientation.z = q2[2]
+        imu_msg.orientation.w = q2[3]
+        self.h_pub.publish(imu_msg)
 
         
+        fix_msg = NavSatFix()
+        fix_msg.header.stamp = rospy.Time.now()
+        fix_msg.header.frame_id = "novatel"
+        fix_msg.status.status = 0
+        fix_msg.status.service = 1
+
+        fix_msg.latitude = msg.fix.latitude * 180. / np.pi
+        fix_msg.longitude = msg.fix.longitude * 180 / np.pi
+        fix_msg.altitude = 0.
+        self.gps_fix_pub.publish(fix_msg)
+
 
     def lcm_nav_handler_OLD(self, channel, data):
         msg = auv_acfr_nav_t.decode(data)
@@ -90,6 +128,10 @@ class NavDataBridge():
         odom_msg.header.frame_id = "gps_odom"
         odom_msg.child_frame_id = 'gps'
         self.gps_odom_pub.publish(odom_msg)
+
+
+
+
         # print("publishing")
 
     def unwrap(self, h):
@@ -128,29 +170,19 @@ class NavDataBridge():
         # self.gps_odom_pub.publish(odom_msg)
         # print("publishing")
 
-        if self.heading != heading_enu:
-            imu_msg = Imu()
-            imu_msg.header.frame_id = "novatel"
-            imu_msg.header.stamp = rospy.Time.now()
-            q2 = Rotation.from_euler('xyz', [0., 0., heading_enu]).as_quat()
-            imu_msg.orientation.x = quat[0]
-            imu_msg.orientation.y = quat[1]
-            imu_msg.orientation.z = quat[2]
-            imu_msg.orientation.w = quat[3]
-            self.h_pub.publish(imu_msg)
+        # if self.heading != heading_enu:
+        #     imu_msg = Imu()
+        #     imu_msg.header.frame_id = "novatel"
+        #     imu_msg.header.stamp = rospy.Time.now()
+        #     q2 = Rotation.from_euler('xyz', [0., 0., heading_enu]).as_quat()
+        #     imu_msg.orientation.x = quat[0]
+        #     imu_msg.orientation.y = quat[1]
+        #     imu_msg.orientation.z = quat[2]
+        #     imu_msg.orientation.w = quat[3]
+        #     self.h_pub.publish(imu_msg)
 
         
 
-        fix_msg = NavSatFix()
-        fix_msg.header.stamp = rospy.Time.now()
-        fix_msg.header.frame_id = "novatel"
-        fix_msg.status.status = 0
-        fix_msg.status.service = 1
-
-        fix_msg.latitude = msg.latitude * 180. / np.pi
-        fix_msg.longitude = msg.longitude * 180 / np.pi
-        fix_msg.altitude = 0.
-        self.gps_fix_pub.publish(fix_msg)
 
 
     
