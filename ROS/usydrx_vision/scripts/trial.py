@@ -9,6 +9,7 @@ from Camera import Camera
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+from buoy_scanner import lightScanner
 
 
 def adjust_gamma(image, gamma=0.4):
@@ -25,9 +26,18 @@ def main(args):
 
   rospy.init_node('Trial', anonymous=True)
   r = rospy.Rate(50) 
-  cam_centre = Camera("/wamv/sensors/cameras/left_camera/image_raw")
-  cam_right= Camera("/wamv/sensors/cameras/right_camera/image_raw")
+  b = BuoyDetector()
+  scanner = lightScanner()
+  image = cv2.imread("red_light.png")
+  
+  # cam_centre = Camera("/wamv/sensors/cameras/left_camera/image_raw")
+  # cam_right= Camera("/wamv/sensors/cameras/right_camera/image_raw")
   while not rospy.is_shutdown():
+    
+    cv2.imshow("winf",image)
+    # b.mask_image_hsv(cam_centre.image)
+    print(scanner.scanBuoy(image))
+    cv2.waitKey(10)
     r.sleep()
   pass   
 
