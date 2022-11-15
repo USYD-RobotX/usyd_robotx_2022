@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <launch>    
+
+    <param name="/use_sim_time" value="true" />
+
 	<include file="$(find usydrx_bringup)/launch/view_rviz.launch"/>
     <param name="wamv/robot_description" command="$(find xacro)/xacro &#x002D;&#x002D;inorder '$(find usydrx_sim_bringup)/urdf/usyd_vrx_wamv.urdf'"/>
 

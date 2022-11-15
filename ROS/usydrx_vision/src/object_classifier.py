@@ -97,6 +97,7 @@ class ObjectClassifier():
 
       #Iterating every object in the array
         #Pose Stamped from Pose message
+
         object_pose_stamped = PoseStamped()
         object_pose_stamped.pose = object.pose
         object_pose_stamped.header.frame_id = "map"
@@ -115,7 +116,7 @@ class ObjectClassifier():
 
         dist_from_camera = object_camera_pose.pose.position.z
         print("Camera: \n",object_camera_pose)
-        if(dist_from_camera> 100):
+        if(dist_from_camera> 30):
           print("Too Far from the boat")
           self.publish_image(display_image,camera)
           continue
