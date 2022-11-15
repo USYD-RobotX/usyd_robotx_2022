@@ -3,7 +3,7 @@
 <launch>
   <!-- Publishes static joint transforms (lidar, cameras, etc) to /tf -->
   
-  <param name="/use_sim_time" value="true" />
+  <param name="/use_sim_time" value="false" />
 
   <arg name="rviz_config" default="$(find usydrx_bringup)/config/rviz.rviz" />
   <node pkg="rviz" type="rviz"
