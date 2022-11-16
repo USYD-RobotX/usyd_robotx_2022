@@ -1,0 +1,1 @@
+rosbag play -l -r 1 *.bag --clock /odometry/filtered:=old/odometry/filtered /odometry/gps:=old/odometry/gps /gps/filtered:=old/gps/filtered /wamv/odom:=old/wamv/odom /tf:=/old/tf

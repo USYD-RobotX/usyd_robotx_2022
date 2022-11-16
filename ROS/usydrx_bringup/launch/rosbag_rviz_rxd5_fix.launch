@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>    
+
+    <param name="/use_sim_time" value="true" />
+
+	<include file="$(find usydrx_bringup)/launch/view_rviz.launch"/>
+    <param name="wamv/robot_description" command="$(find xacro)/xacro &#x002D;&#x002D;inorder '$(find usydrx_sim_bringup)/urdf/usyd_vrx_wamv.urdf'"/>
+
+    <node ns="wamv" pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub"/>
+
+    <!-- <node ns="wamv" pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+    </node> -->
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="wamv_odom_pub" args="0 0 0 0 0 0   wamv/odom odom" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="wamv_map_pub" args="0 0 0 0 0 0   map wamv/odom" />
+
+    <include file="$(find usydrx_vision)/launch/tf_launch_vision.launch"/>
+
+
+</launch>

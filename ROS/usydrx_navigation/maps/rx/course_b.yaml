@@ -1,0 +1,7 @@
+image: course_b.pgm
+resolution: 0.400000
+origin: [145.199997, -204.800003, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+
