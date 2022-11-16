@@ -5,15 +5,19 @@ from functools import reduce
 import operator
 import socket
 import rospy
+from std_msgs.msg import String
 import time
 HOST = "robot.server"  # The server's hostname or IP address
+# HOST = "127.0.0.1"  # The server's hostname or IP address
+
 PORT = 12345  # The port used by the server
 
 
 class HeartbeatClient:
     
-    def __init__(self) -> None:
-        # rospy.init_node("heartbeat")
+    def __init__(self, s) -> None:
+        rospy.init_node("heartbeat")
+        self.socket = s
 
         self.latitude = 0.0
         self.longitude = 0.0
@@ -24,6 +28,19 @@ class HeartbeatClient:
 
         self.system_mode = 1  # 1 = Remote, #2 = Autonomous #3 = Killed
         self.uav_status = 1 # 1 = Stowed, #2 = Deplotyed #3 = Faulted
+
+        rospy.Subscriber("/light_sequence", String, self.light_sequence_cb)
+
+        
+
+
+    def light_sequence_cb(self, data):
+
+        print("got light sequence")
+        msg = self.light_buoy_generate(data.data)
+        self.send_msg(msg)
+        pass
+
 
     def get_date(self):
         today = time.strftime("%d%m%y")
@@ -76,6 +93,19 @@ class HeartbeatClient:
         return hb_msg
         print(time_str)
 
+    def light_buoy_generate(self, rgb):
+        today = self.get_date()
+
+        time_str = self.get_time()
+
+        hb_string = f"RXCOD,{today},{time_str},{self.team_id},{rgb}"
+
+        checksum = self.get_checksum(hb_string)
+
+        hb_msg = f"${hb_string}*{checksum}\r\n"
+
+        return hb_msg
+
     def get_checksum(self, nmea_str):
         # this returns a 2 digit hexadecimal string to use as a checksum.
         sum = hex(reduce(operator.xor, map(ord, nmea_str), 0))[2:].upper()
@@ -84,30 +114,42 @@ class HeartbeatClient:
         else:
             return '0' + sum
 
+    def send_msg(self, msg):
+        print("sending", msg)
+        self.socket.sendall(msg.encode())
+
+
 
     def start(self):
 
         st = time.time()
+
+        # self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # self.socket.accept()
+        # self.socket.connect((HOST, PORT))
+
+   
+               
         while True:
-            try:
-                
-                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                    s.connect((HOST, PORT))
-                    while True:
-                        msg = self.get_hb_string()
-                        print(f"sending {msg}")
+            msg = self.get_hb_string()
+            self.send_msg(msg)
 
-                        s.sendall(msg.encode())
-                        time.sleep(1.0)
+            # msg = self.light_buoy_generate("RGB")
+            # print(f"sending {msg}")
 
-                        if time.time() - st > 10:
-                            self.system_mode = 2
+            # s.sendall(msg.encode())
+            # time.sleep(1.0)
 
-            except {ConnectionError, BrokenPipeError} as e:
-                print(f"Error {e}")
+            if time.time() - st > 1:
+                self.system_mode = 2
+
             time.sleep(1.0)
 
 if __name__ == "__main__":
-    hbc = HeartbeatClient()
-    hbc.start()
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((HOST, PORT))
+        # s.sendall(b"Hello, world")
+        hbc = HeartbeatClient(s)
+        hbc.start()
     # print(hbc.get_hb_string())
