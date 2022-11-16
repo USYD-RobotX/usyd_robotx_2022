@@ -24,7 +24,7 @@ def difference_between_angles(a, b):
 
 RADIUS_THRESHOLD = 4  #m
 
-THETA_THRESHOLD = math.radians(45)  # 45 degrees
+THETA_THRESHOLD = math.radians(90)  # 45 degrees
 
 
 class PathFollower():

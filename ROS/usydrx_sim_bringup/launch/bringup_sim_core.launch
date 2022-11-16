@@ -41,4 +41,8 @@
     <include file="$(find usyd_vrx_navigation)/launch/scanAndMap.launch"/>
 
     <include file="$(find usyd_vrx_navigation)/launch/object_server.launch"/> -->
+
+    <include file="$(find usydrx_navigation)/launch/point2laser_rxd2.launch"/>
+
+
 </launch>

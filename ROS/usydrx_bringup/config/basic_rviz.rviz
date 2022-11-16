@@ -6,11 +6,13 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /Grid1
         - /Odometry1
-        - /Odometry1/Status1
         - /RobotModel1
         - /AerialMapDisplay1
-        - /AerialMapDisplay1/Status1
+        - /Map1
+        - /MarkerArray1
+        - /MarkerArray1/Status1
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz/Selection
@@ -54,7 +56,7 @@ Visualization Manager:
         Y: 0
         Z: 0
       Plane: XY
-      Plane Cell Count: 10
+      Plane Cell Count: 1000
       Reference Frame: <Fixed Frame>
       Value: true
     - Angle Tolerance: 0.009999999776482582
@@ -257,13 +259,13 @@ Visualization Manager:
     - Alpha: 0.699999988079071
       Blocks: 3
       Class: rviz_plugins/AerialMapDisplay
-      Draw Behind: false
+      Draw Behind: true
       Enabled: true
-      Map Frame: odom
+      Map Frame: map
       Map transform type: NavSatFix Messages and Map Frame
       Name: AerialMapDisplay
       Object URI: https://b.tile.openstreetmap.org/{z}/{x}/{y}.png
-      Topic: /fix
+      Topic: /wamv/sensors/gps/gps/fix
       UTM Frame: utm
       UTM Zone: -1
       Value: true
@@ -271,11 +273,86 @@ Visualization Manager:
       Z Offset: 0
       Z Reference: <NavSatFix Message>
       Zoom: 18
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 2
+      Head Radius: 2
+      Name: Pose
+      Queue Size: 10
+      Shaft Length: 5
+      Shaft Radius: 1
+      Shape: Arrow
+      Topic: /move_base_simple/goal
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz/Path
+      Color: 25; 255; 0
+      Enabled: true
+      Head Diameter: 0.6000000238418579
+      Head Length: 0.6000000238418579
+      Length: 0.30000001192092896
+      Line Style: Lines
+      Line Width: 0.029999999329447746
+      Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: Arrows
+      Queue Size: 10
+      Radius: 0.029999999329447746
+      Shaft Diameter: 0.30000001192092896
+      Shaft Length: 0.30000001192092896
+      Topic: /wamv/desired_path
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/Pose
+      Color: 138; 226; 52
+      Enabled: true
+      Head Length: 1
+      Head Radius: 1.5
+      Name: Pose
+      Queue Size: 0
+      Shaft Length: 4
+      Shaft Radius: 0.5
+      Shape: Arrow
+      Topic: /wamv/desired_pose
+      Unreliable: false
+      Value: true
+    - Alpha: 0.699999988079071
+      Class: rviz/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: false
+      Name: Map
+      Topic: /wamv/map
+      Unreliable: false
+      Use Timestamp: false
+      Value: false
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /wamv/visualisation/objects
+      Name: MarkerArray
+      Namespaces:
+        obstacle_visualsiation: true
+        obstacle_visualsiation_text: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: odom
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
@@ -299,7 +376,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 44.01326370239258
+      Distance: 28.357261657714844
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -307,17 +384,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: 3.153052806854248
+        Y: -7.018361568450928
+        Z: 6.471522331237793
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6203985810279846
+      Pitch: 0.6797968745231628
       Target Frame: wamv/base_link
-      Yaw: 3.893585681915283
+      Yaw: 0.6872677206993103
     Saved: ~
 Window Geometry:
   Displays:
@@ -336,4 +413,4 @@ Window Geometry:
     collapsed: false
   Width: 1267
   X: 72
-  Y: 27
+  Y: 0

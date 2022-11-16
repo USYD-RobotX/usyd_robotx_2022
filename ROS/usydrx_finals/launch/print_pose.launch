@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>    
+
+    <node pkg="usydrx_finals" type="print_pose.py" name="print_pose" output="screen"/>
+
+</launch>

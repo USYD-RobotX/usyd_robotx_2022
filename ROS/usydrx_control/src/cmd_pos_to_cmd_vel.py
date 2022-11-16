@@ -46,7 +46,7 @@ class PositionController():
 
         rospy.Subscriber("odom", Odometry, self.receive_odom)
 
-        rospy.Subscriber("/move_base_simple/goal", PoseStamped, self.receive_desired_pose)
+        rospy.Subscriber("/wamv/desired_pose", PoseStamped, self.receive_desired_pose)
 
         self.cmd_vel_pub = rospy.Publisher("cmd_vel", Twist, queue_size=10)
 

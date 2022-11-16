@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>    
+
+    <node pkg="usydrx_bringup" type="heartbeat.py" name="heartbeat" output="screen" respawn="true"/>
+
+</launch>

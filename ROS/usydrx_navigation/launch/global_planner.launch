@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <launch>
+    <param name="/use_sim_time" value="true" />
+
     <node ns="wamv" pkg="global_planner" type="planner" name="global_planner" output="screen">
            <!--remap from="global_planner/costmap/footprint" to ="costmap_2d/costmap/footprint"/-->
            <!--remap from="global_planner/costmap/costmap" to ="costmap_2d/costmap/costmap"/-->
-           <!-- <remap from="global_planner/goal" to="/move_base_simple/goal"/> -->
+           <remap from="global_planner/goal" to="/move_base_simple/goal"/>
            <param name="planner/old_navfn_behavior" value="false" />
            <param name="planner/use_quadratic" value="true" />
            <param name="planner/use_dijkstra" value="true" />
            <param name="planner/use_grid_path" value="false" />
+           <param name="planner/default_tolerance" value="10"/>
            <param name="planner/allow_unknown" value="true" />
            <param name="planner/planner_window_x" value="10.0" />
            <param name="planner/planner_window_y" value="10.0" />
@@ -16,10 +19,12 @@
            <param name = "costmap/footprint" value = "[[-4, -2.4], [4, -2.4], [4, 2.4], [-4,2.4]]"/>
            <param name = "costmap/height" value = "100"/>
            <param name = "costmap/width" value = "100"/>
-          <param name = "costmap/robot_radius" value = "12.0"/>
+          <param name = "costmap/robot_radius" value = "11.0"/>
            <param name = "costmap/static_map" value = "true"/>
            <param name = "costmap/inflation_layer/inflation_radius" value = "3.5"/>
            <param name = "costmap/inflation_layer/cost_scaling_factor" value = "1"/>
+            <param name = "costmap/transform_tolerance" value = "10"/>
+
            <remap from="global_planner/planner/plan" to="desired_path"/>
            <param name= "costmap/robot_base_frame" value="wamv/base_link"/>
          </node>

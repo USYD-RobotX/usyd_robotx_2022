@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>    
+
+    <node pkg="usydrx_finals" type="final_runs.py" name="final_run" output="screen"/>
+
+</launch>

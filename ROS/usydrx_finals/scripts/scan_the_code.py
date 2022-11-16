@@ -42,11 +42,14 @@ class ScanCode:
             count = 0
             rospy.loginfo("Attempting to Scan buoy")
 
-            while(found == False):
+            while(found == False and True):
                 ros_image = rospy.wait_for_message("/wamv/sensors/cameras/front_camera/image_raw" ,Image)
                 image = self.bridge.imgmsg_to_cv2(ros_image, desired_encoding="bgr8")
+                print("scanning")
                 colour = self.scanner.scanBuoy(image)
+                print("Got", colour)
                 count += 1
+
                 # if count > 10:
                 #     return ["red", "green", "blue"]
                 #rospy.loginfo("Detected colour %s",colour)

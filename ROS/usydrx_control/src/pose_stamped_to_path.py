@@ -24,7 +24,7 @@ class PoseStampedToPath:
 
         self.path_pub = rospy.Publisher("/wamv/desired_path", Path, queue_size=10)
 
-        rospy.Subscriber("/move_base_simple/goal", PoseStamped, self.pose_stamped_receive)
+        rospy.Subscriber("/straight_path", PoseStamped, self.pose_stamped_receive)
 
         rospy.Subscriber("/wamv/odom", Odometry, self.odom_receive)
 
@@ -34,6 +34,7 @@ class PoseStampedToPath:
         self.current_pose = odom.pose.pose
 
     def pose_stamped_receive(self, pose_stamped):
+        print("Recieved Pose", pose_stamped)
 
         if self.current_pose:
 

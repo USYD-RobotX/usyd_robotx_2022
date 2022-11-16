@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>    
+    <include file="$(find usydrx_bringup)/launch/heartbeat.launch"/>
+    <include file="$(find usydrx_bringup)/launch/basic_view_rviz.launch"/>
+    <node pkg="usydrx_bringup" type="judge_display.py" name="judge_display" output="screen" respawn="true"/>
+
+</launch>

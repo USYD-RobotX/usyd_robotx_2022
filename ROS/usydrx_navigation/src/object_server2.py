@@ -231,8 +231,6 @@ class ObjectServer:
 
         # data = map_data_np[self.map_land_mask]
 
-        print("no data")
-
         for r, row in enumerate(map_data_bool_non_land):
             for c, i in enumerate(row):
                 if(i):

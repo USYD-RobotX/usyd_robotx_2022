@@ -10,10 +10,10 @@
         <param name="~resolution" value="0.4"/>
         <param name="~offset_x" value="200.0"/>
         <param name="~offset_y" value="100.0"/>
-        <param name="~increment" value="10"/>
-        <param name="~decrement" value="4"/>
+        <param name="~increment" value="8"/>
+        <param name="~decrement" value="2"/>
         <param name="~clr_range" value="30"/>
-        <param name="~min_range" value="15"/>
+        <param name="~min_range" value="6"/>
 
         <remap from="odom" to="/wamv/odom"/>
         <remap from="scan" to="/wamv/sensors/lidars/lidar_wamv_front/scan"/>

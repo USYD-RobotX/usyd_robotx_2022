@@ -5,10 +5,11 @@ from functools import reduce
 import operator
 import socket
 import rospy
-from std_msgs.msg import String
+from std_msgs.msg import String, Int32
 import time
+from sensor_msgs.msg import NavSatFix
 HOST = "robot.server"  # The server's hostname or IP address
-# HOST = "127.0.0.1"  # The server's hostname or IP address
+HOST = "127.0.0.1"  # The server's hostname or IP address
 
 PORT = 12345  # The port used by the server
 
@@ -26,13 +27,36 @@ class HeartbeatClient:
         self.long_indicator = "E"
         self.team_id = "USYD"
 
-        self.system_mode = 1  # 1 = Remote, #2 = Autonomous #3 = Killed
+        self.system_mode = 3  # 1 = Remote, #2 = Autonomous #3 = Killed
         self.uav_status = 1 # 1 = Stowed, #2 = Deplotyed #3 = Faulted
 
         rospy.Subscriber("/light_sequence", String, self.light_sequence_cb)
+        rospy.Subscriber("/fix", NavSatFix, self.gps_cb)
+        rospy.Subscriber("/relay_state", String, self.relay_state_cb)
+        rospy.Subscriber("/entrance_gate", Int32, self.entrance_gate_msg_cb)
+
 
         
+    def gps_cb(self, data: NavSatFix):
+        self.longitude = abs(data.longitude)
+        self.latitude = abs(data.latitude)
 
+    def relay_state_cb(self, data: String):
+        if data.data == "AMBER":
+            self.system_mode = 1
+        elif data.data == "RED":
+            self.system_mode = 3
+        elif data.data == "GREEN":
+            self.system_mode = 2
+        else:
+            self.system_mode = 3
+
+
+    def entrance_gate_msg_cb(self, data: Int32):
+        gate = data.data
+        message = self.get_entrance_gate_msg(gate, gate)
+        self.send_msg(message)
+        pass
 
     def light_sequence_cb(self, data):
 
@@ -64,7 +88,7 @@ class HeartbeatClient:
 
         return hb_msg
 
-    def entrance_gate_msg(self, entrance_gate, exit_gate):
+    def get_entrance_gate_msg(self, entrance_gate, exit_gate):
 
         today = self.get_date()
 
@@ -130,7 +154,7 @@ class HeartbeatClient:
 
    
                
-        while True:
+        while not rospy.is_shutdown():
             msg = self.get_hb_string()
             self.send_msg(msg)
 
@@ -140,8 +164,8 @@ class HeartbeatClient:
             # s.sendall(msg.encode())
             # time.sleep(1.0)
 
-            if time.time() - st > 1:
-                self.system_mode = 2
+            # if time.time() - st > 1:
+            #     self.system_mode = 2
 
             time.sleep(1.0)
 
