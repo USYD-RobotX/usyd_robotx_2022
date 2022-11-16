@@ -13,7 +13,7 @@ from std_msgs.msg import Float32, Empty
 
 
 
-max_cmd = 0.6
+max_cmd = 0.99
 class ControlToLCM():
     lcm_cmd_mag = 25000
 
@@ -40,15 +40,22 @@ class ControlToLCM():
         self.lc = lcm.LCM()
 
     def receive_right_front(self, data):
+        print("rec_rfront")
         self.cmd_msg[3] = (time.perf_counter(), max(-max_cmd, min(max_cmd, (time.perf_counter()), data.data)))
 
     def receive_right_rear(self, data):
+        print("rec_rrear")
+
         self.cmd_msg[1] = (time.perf_counter(), max(-max_cmd, min(max_cmd, (time.perf_counter()), data.data)))
 
     def receive_left_front(self, data):
+        print("rec_lfront")
+
         self.cmd_msg[2] = (time.perf_counter(), max(-max_cmd, min(max_cmd, (time.perf_counter()), data.data)))
 
     def receive_left_rear(self, data):
+        print("rec_lrear")
+
         self.cmd_msg[0] = (time.perf_counter(), max(-max_cmd, min(max_cmd, (time.perf_counter()), data.data)))
 
 
@@ -78,6 +85,7 @@ class ControlToLCM():
         cmd_msg.bow_stbd = float(self.cmd_msg[3][1] * self.lcm_cmd_mag)
 
         self.lc.publish("WAMV.THRUSTER_ALLOC", cmd_msg.encode())
+        print("Thruster alloc")
         
     def start(self):
         rate = 20

@@ -9,6 +9,9 @@
     <include file="$(find usydrx_lcm_bridge)/launch/run_bridge.launch">
     </include>
 
+    <include file="$(find usydrx_navigation)/launch/point2laser_rxd2.launch"/>
+
+
 
     
 </launch>

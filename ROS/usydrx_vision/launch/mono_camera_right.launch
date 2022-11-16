@@ -61,7 +61,7 @@
   <!-- Pixel Format -->
   <arg name="pixel_format" default="BGR8Packed"/>
   <!-- Bandwidth -->
-  <arg name="stream_bytes_per_second" default="41500000"/>
+  <arg name="stream_bytes_per_second" default="1500000"/>
   <!-- PTP Synchronization -->
   <arg name="ptp_mode" default="Off"/>
   <!-- GPIO -->

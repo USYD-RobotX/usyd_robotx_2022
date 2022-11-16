@@ -46,7 +46,7 @@ class PositionController():
 
         rospy.Subscriber("odom", Odometry, self.receive_odom)
 
-        rospy.Subscriber("desired_pose", Pose, self.receive_desired_pose)
+        rospy.Subscriber("/move_base_simple/goal", PoseStamped, self.receive_desired_pose)
 
         self.cmd_vel_pub = rospy.Publisher("cmd_vel", Twist, queue_size=10)
 
@@ -63,7 +63,7 @@ class PositionController():
 
     def receive_desired_pose(self, pose: Pose):
         print("received", pose)
-        self.desired_pose = pose
+        self.desired_pose = pose.pose
 
     def position_control_loop(self, freq=50):
 
@@ -158,9 +158,9 @@ class PositionController():
             angle_thresh = 0.05
             if abs(diff_xyz[0]) < dist_thresh and abs(diff_xyz[1]) < dist_thresh and abs(difference_between_angles(desired_orient_z,curr_orient_z)) < angle_thresh:
                 
-                print(diff_xyz[0])
+                # print(diff_xyz[0])
 
-                print(difference_between_angles(desired_orient_z,curr_orient_z))
+                # print(difference_between_angles(desired_orient_z,curr_orient_z))
 
 
                 cmd_vel = Twist()
@@ -171,7 +171,7 @@ class PositionController():
                 cmd_vel.angular.z = 0
 
                 self.cmd_vel_pub.publish(cmd_vel)
-                print("Close enough")
+                print("Zero Vel")
             else:
                 cmd_vel = Twist()
                 cmd_vel.linear.x = x_vel

@@ -7,7 +7,7 @@ from nav_msgs.msg import Path, Odometry
 import math
 import tf
 
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, PoseStamped
 # from geometry_msgs.msg import Twist
 import numpy as np
 
@@ -37,9 +37,9 @@ class PathFollower():
         
         self.current_path: List[Pose] = []
 
-        self.desired_pose_pub = rospy.Publisher("desired_pose", Pose, queue_size=10)
+        self.desired_pose_pub = rospy.Publisher("desired_pose", PoseStamped, queue_size=10)
         rospy.Subscriber("odom", Odometry, self.receive_odom)
-
+        
 
         rospy.Subscriber("desired_path", Path, self.receive_desired_path)
 
@@ -94,7 +94,13 @@ class PathFollower():
             
             if distance < RADIUS_THRESHOLD and diff_rot < THETA_THRESHOLD:
                 if len(self.current_path) == 1:
-                    self.desired_pose_pub.publish(self.current_path[0])
+
+                    dp = PoseStamped()
+                    dp.header.frame_id = "map"
+                    dp.header.stamp = rospy.Time.now()
+                    dp.pose = self.current_path[0]
+
+                    self.desired_pose_pub.publish(dp)
                 del self.current_path[0]
                 # print("DELETE FIRST PATH")
                 continue
@@ -103,7 +109,12 @@ class PathFollower():
             
             # Go to path
             # print(f"PUBLISHING {desired_pose}")
-            self.desired_pose_pub.publish(desired_pose)
+            dp = PoseStamped()
+            dp.header.frame_id = "map"
+            dp.header.stamp = rospy.Time.now()
+            dp.pose = desired_pose
+
+            self.desired_pose_pub.publish(dp)
 
             r.sleep()
             # current_pose_rot = self.current_pose.

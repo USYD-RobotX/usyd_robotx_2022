@@ -12,12 +12,19 @@ from acfrlcm import auv_acfr_nav_t
 from senlcm import xsens_t
 from senlcm import gpsd3_t
 
+from acfrlcm import relay_status_t, relay_command_t
+
+
 import rospy
 
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import NavSatFix, Imu
-from std_msgs.msg import Header
+from std_msgs.msg import Header, String
 import math
+
+RELAY_LIGHT_RED = 14
+RELAY_LIGHT_AMBER= 21
+RELAY_LIGHT_GREEN=22
 
 class NavDataBridge():
     
@@ -33,6 +40,7 @@ class NavDataBridge():
         self.gps_fix_pub = rospy.Publisher("fix", NavSatFix, queue_size=1)
         self.imu_pub = rospy.Publisher("xsens_imu", Imu, queue_size=1)
         self.h_pub = rospy.Publisher("gps_heading", Imu, queue_size=1)
+        self.relay_pub = rospy.Publisher("/relay_state", String, queue_size=1)
         
 
         self.lc = lcm.LCM()
@@ -40,6 +48,29 @@ class NavDataBridge():
 
         gpsd_sub = self.lc.subscribe("WAMV.GPSD_CLIENT", self.lcm_gps_handler)
         isub = self.lc.subscribe("WAMV.XSENS", self.xsens_handler)
+        relay_sub = self.lc.subscribe('WAMV.RELAY_CONTROL', self.handle_relay_status)
+
+    def handle_relay_status(self, channel_name, data):
+        smsg = String()
+        msg = relay_command_t.decode(data)
+        if msg.relay_number == RELAY_LIGHT_RED:
+            if msg.relay_request == 0:
+                # print("RED")
+                smsg.data = "RED"
+                self.relay_pub.publish(smsg)
+        elif msg.relay_number == RELAY_LIGHT_AMBER:
+            if msg.relay_request == 1:
+                # print("AMBER")
+                smsg.data = "AMBER"
+                self.relay_pub.publish(smsg)
+        elif msg.relay_number == RELAY_LIGHT_GREEN:
+            if msg.relay_request == 1:
+                # print("GREEN")
+                smsg.data = "GREEN"
+                self.relay_pub.publish(smsg)
+
+        
+    
 
     def xsens_handler(self, channel, data):
         msg = xsens_t.decode(data)

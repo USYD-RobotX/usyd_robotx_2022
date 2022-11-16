@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<launch>    
-	<include file="$(find usydrx_bringup)/launch/bringup_wamv_core.launch"/>
-	<include file="$(find usydrx_control)/launch/control_with_path_following.launch"/>
-	<node ns="wamv" pkg="usydrx_control" type="pose_stamped_to_path.py" name="goal_to_path_script" output="screen"/>
-</launch>

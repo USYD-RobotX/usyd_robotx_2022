@@ -255,7 +255,7 @@ int main(int argc, char **argv){
   MappingServer mapping_server(n);
   tf2_ros::Buffer tf_buffer;
   tf2_ros::TransformListener tf_listener(tf_buffer);
-  ros::Duration(7.0).sleep();
+  // ros::Duration(7.0).sleep();
   
   ros::Subscriber scan_sub = n.subscribe("scan",10,&MappingServer::scanCallback, &mapping_server);
   ros::Subscriber map_sub = n.subscribe("map",10,&MappingServer::mapCallback, &mapping_server);
@@ -263,12 +263,14 @@ int main(int argc, char **argv){
   
 
   //TODO Recieve rate from rosparam. GET VELODYNE LOCATION FROM ROS
-  int rate_hz = 10;
+  int rate_hz = 5;
   ros::Rate rate(rate_hz);
   while(ros::ok()){
     //ROS_INFO("Running!");
     mapping_server.getOdom(&tf_buffer);
     mapping_server.generateMap();
+      ROS_INFO("Publishing");
+
     mapping_server.publishMap(&map_publisher);
     ros::spinOnce();
     rate.sleep();

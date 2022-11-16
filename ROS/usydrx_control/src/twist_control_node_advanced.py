@@ -32,6 +32,11 @@ class WAMVController():
     # a = 0.05
     a = 1
 
+    prev_1 = 0
+    prev_2 = 0
+    prev_3 = 0
+    prev_4 = 0
+
     def __init__(self):
         self.desired_twist = Twist()
         self.twist = Twist()
@@ -206,12 +211,42 @@ class WAMVController():
         bl = self.linearise_thrust(f_bl)
 
         # print(f"{fr:.2f}, {fl:.2f}, {br:.2f}, {bl:.2f}")
+        
+        a = 0.05
+        fr = fr*(a) + self.prev_1*(1-a)
+        fl = fl*(a) + self.prev_2*(1-a)
+        br = br*(a) + self.prev_3*(1-a)
+        bl = bl*(a) + self.prev_4*(1-a)
 
-        self.right_front_pub.publish(fr)
+
+        min_1 = 0.3
+        min_2 = 0
+        min_3 = 0
+        min_4 = 0
+
+        if abs(fr)<min_1:
+            # print("fr", fr)
+            self.prev_1 = fr
+            fr = 0
+            self.right_front_pub.publish(fr)
+            # self.prev_1 = fr
+
+        else:
+
+
+            self.right_front_pub.publish(fr)
+            self.prev_1 = fr
+
         self.left_front_pub.publish(fl)
         self.right_rear_pub.publish(br)
         self.left_rear_pub.publish(bl)
 
+        
+        self.prev_2 = fl
+        self.prev_3 = br
+        self.prev_4 = bl
+
+        print(f"Thrust motors {fr:.2f}, {fl:.2f}, {br:.2f}, {bl:.2f}")
         # self.right_front_pub.publish(f_fr)
         # self.left_front_pub.publish(f_fl)
         # self.right_rear_pub.publish(f_br)
@@ -233,8 +268,8 @@ class WAMVController():
 
     def linearise_thrust_bow(self, thrust):
         # val = val/125
-        max_thrust = 300
-        min_thrust = -260
+        max_thrust = 90
+        min_thrust = -90
 
         cmd = self.linearise(thrust, max_thrust, min_thrust)
 
@@ -271,11 +306,11 @@ class WAMVController():
         angle_pid.sample_time = 1/freq
         angle_pid.output_limits = (-10000, 10000)
 
-        x_pid = PID(50.0, 0, 0, setpoint=0)
+        x_pid = PID(180.0, 0, 50, setpoint=0)
         x_pid.sample_time = 1/freq
         x_pid.output_limits = (-1000, 1000)
         
-        y_pid = PID(20.0, 0, 0, setpoint=0)
+        y_pid = PID(140.0, 0, 30, setpoint=0)
         y_pid.sample_time = 1/freq
         y_pid.output_limits = (-1000, 1000)
         st = time.perf_counter()
@@ -283,11 +318,11 @@ class WAMVController():
 
         while not rospy.is_shutdown():
             desired_angle_rate = max(min(MAX_R, self.desired_twist.angular.z), -MAX_X)
-            # desired_angle_rate = 0.4
+            # desired_angle_rate = -0.2
 
             desired_vel = (self.desired_twist.linear.x, self.desired_twist.linear.y)
 
-            # desired_vel = (0.0, 0.4)
+            # desired_vel = (0, 0.5)
 
             current_vel = (self.twist.linear.x, self.twist.linear.y)
 
@@ -362,9 +397,17 @@ class WAMVController():
                 if abs(current_rot_speed) < 0.1:
                     v = 0
                     angle_pid.reset()
-            print(f"Thrust: {_x:.2f}, {_y:.2f}, {v:.2f}")
+
+            # _x = 0
+            # _y = 80
+            # v = 0
+            print(f"Desired: {desired_vel[0]:.2f}, {desired_vel[1]:.2f}, {desired_angle_rate:.2f}")
+            print(f"Current: {current_vel[0]:.2f}, {current_vel[1]:.2f}, {current_rot_speed:.2f}")
+
+            print(f"Forces: {_x:.2f}, {_y:.2f}, {v:.2f}")
+
             self.command_thrust(_x, _y, v)
-            print(f"After")
+            # print(f"After")
 
             # print(F_x, F_y, T_z)
             # self.command_thrust(F_x, F_y, T_z)

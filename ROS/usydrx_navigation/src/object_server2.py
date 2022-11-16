@@ -168,6 +168,8 @@ class ObjectServer:
 
     def __init__(self) -> None:
         rospy.init_node("object_server")
+
+        print("initing server")
         sub = rospy.Subscriber("wamv/map", OccupancyGrid, self.map_callback)
         rospy.Subscriber("/wamv/reset_objects",String,self.reset_callback)
         self.load_map_land_mask()
@@ -203,6 +205,7 @@ class ObjectServer:
 
 
     def process_map(self):
+
         if self.map is None:
             return
         my_map = self.map
@@ -228,6 +231,7 @@ class ObjectServer:
 
         # data = map_data_np[self.map_land_mask]
 
+        print("no data")
 
         for r, row in enumerate(map_data_bool_non_land):
             for c, i in enumerate(row):
@@ -267,6 +271,7 @@ class ObjectServer:
         #Apply a distance threshold Cluster on the objects.
         #print(my_data,thresh)
         if len(my_data) == 0 :
+
             return
         try:
             clust = hcluster.fclusterdata(my_data, DIST_THRESH, criterion="distance")
@@ -277,6 +282,7 @@ class ObjectServer:
                 clust = hcluster.fclusterdata(my_data, DIST_THRESH, criterion="distance")
             except Exception as e:
                 rospy.logwarn("Second attempt no working")
+
             #return
         clusters = {}
         count = 0

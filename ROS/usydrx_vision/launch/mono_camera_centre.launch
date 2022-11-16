@@ -24,15 +24,15 @@
   <arg name="trigger_activation" default="RisingEdge"/>
   <arg name="trigger_delay" default="0.0"/>
   <!-- Exposure -->
-  <arg name="exposure" default="800"/>
+  <arg name="exposure" default="400"/>
   <arg name="exposure_auto" default="Continuous"/>
   <arg name="exposure_auto_alg" default="FitRange"/>
   <arg name="exposure_auto_tol" default="5"/>
-  <arg name="exposure_auto_max" default="800"/>
-  <arg name="exposure_auto_min" default="800"/>
-  <arg name="exposure_auto_outliers" default="800"/>
-  <arg name="exposure_auto_rate" default="800"/>
-  <arg name="exposure_auto_target" default="800"/>
+  <arg name="exposure_auto_max" default="400"/>
+  <arg name="exposure_auto_min" default="400"/>
+  <arg name="exposure_auto_outliers" default="400"/>
+  <arg name="exposure_auto_rate" default="400"/>
+  <arg name="exposure_auto_target" default="400"/>
   <!-- Gain -->
   <arg name="gain" default="0"/>
   <arg name="gain_auto" default="Continuous"/>
@@ -62,7 +62,7 @@
   <!-- Pixel Format -->
   <arg name="pixel_format" default="BGR8Packed"/>
  <!-- Bandwidth -->
-  <arg name="stream_bytes_per_second" default="41500000"/>
+  <arg name="stream_bytes_per_second" default="1500000"/>
   <!-- PTP Synchronization -->
   <arg name="ptp_mode" default="Off"/>
   <!-- GPIO -->
