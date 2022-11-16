@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>    
+	<!-- <include file="$(find usydrx_bringup)/launch/bringup_wamv_core.launch"/> -->
+ 	<include file="$(find usydrx_control)/launch/launch_control2.launch"/>
+</launch>

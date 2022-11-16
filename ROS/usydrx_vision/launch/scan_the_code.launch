@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node ns="wamv" pkg="usydrx_vision" type="scan_buoy_server.py" name="buoy_scanner" output="screen"/>
+
+</launch>
