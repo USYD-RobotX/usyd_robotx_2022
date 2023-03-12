@@ -12,7 +12,7 @@ Panels:
         - /AerialMapDisplay1
         - /Map1
         - /MarkerArray1
-        - /MarkerArray1/Status1
+        - /LaserScan1
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz/Selection
@@ -33,7 +33,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: LaserScan
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -76,7 +76,7 @@ Visualization Manager:
           Scale: 1
           Value: true
         Value: true
-      Enabled: true
+      Enabled: false
       Keep: 20
       Name: Odometry
       Position Tolerance: 0.10000000149011612
@@ -93,7 +93,7 @@ Visualization Manager:
         Value: Arrow
       Topic: /odometry/filtered
       Unreliable: false
-      Value: true
+      Value: false
     - Alpha: 1
       Class: rviz/RobotModel
       Collision Enabled: false
@@ -265,7 +265,7 @@ Visualization Manager:
       Map transform type: NavSatFix Messages and Map Frame
       Name: AerialMapDisplay
       Object URI: https://b.tile.openstreetmap.org/{z}/{x}/{y}.png
-      Topic: /wamv/sensors/gps/gps/fix
+      Topic: /fix
       UTM Frame: utm
       UTM Zone: -1
       Value: true
@@ -344,9 +344,36 @@ Visualization Manager:
       Marker Topic: /wamv/visualisation/objects
       Name: MarkerArray
       Namespaces:
-        obstacle_visualsiation: true
-        obstacle_visualsiation_text: true
+        {}
       Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/LaserScan
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: LaserScan
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.5
+      Style: Flat Squares
+      Topic: /wamv/sensors/lidars/lidar_wamv_front/scan
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
       Value: true
   Enabled: true
   Global Options:
@@ -376,7 +403,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 28.357261657714844
+      Distance: 83.57319641113281
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -384,17 +411,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 3.153052806854248
-        Y: -7.018361568450928
-        Z: 6.471522331237793
+        X: 0.638653039932251
+        Y: 0.908361554145813
+        Z: 4.797701358795166
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6797968745231628
+      Pitch: 1.0947965383529663
       Target Frame: wamv/base_link
-      Yaw: 0.6872677206993103
+      Yaw: 4.255455017089844
     Saved: ~
 Window Geometry:
   Displays:
@@ -413,4 +440,4 @@ Window Geometry:
     collapsed: false
   Width: 1267
   X: 72
-  Y: 0
+  Y: 27

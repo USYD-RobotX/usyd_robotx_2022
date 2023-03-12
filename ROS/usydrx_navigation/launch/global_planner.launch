@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <param name="/use_sim_time" value="true" />
+    <param name="/use_sim_time" value="false" />
 
     <node ns="wamv" pkg="global_planner" type="planner" name="global_planner" output="screen">
            <!--remap from="global_planner/costmap/footprint" to ="costmap_2d/costmap/footprint"/-->

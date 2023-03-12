@@ -9,7 +9,7 @@ from std_msgs.msg import String, Int32
 import time
 from sensor_msgs.msg import NavSatFix
 HOST = "robot.server"  # The server's hostname or IP address
-HOST = "127.0.0.1"  # The server's hostname or IP address
+# HOST = "127.0.0.1"  # The server's hostname or IP address
 
 PORT = 12345  # The port used by the server
 
@@ -34,6 +34,12 @@ class HeartbeatClient:
         rospy.Subscriber("/fix", NavSatFix, self.gps_cb)
         rospy.Subscriber("/relay_state", String, self.relay_state_cb)
         rospy.Subscriber("/entrance_gate", Int32, self.entrance_gate_msg_cb)
+        rospy.Subscriber("/dock_status", String, self.dock_status_cb)
+
+    def dock_status_cb(self, data: String):
+        msg = data.data
+        hb = self.get_dock_string(msg)
+        self.send_msg(hb)
 
 
         
@@ -130,6 +136,19 @@ class HeartbeatClient:
 
         return hb_msg
 
+    def get_dock_string(self, msg):
+        today = self.get_date()
+
+        time_str = self.get_time()
+
+        hb_string = f"RXDOK,{today},{time_str},{self.team_id},{msg}"
+
+        checksum = self.get_checksum(hb_string)
+
+        hb_msg = f"${hb_string}*{checksum}\r\n"
+
+        return hb_msg
+
     def get_checksum(self, nmea_str):
         # this returns a 2 digit hexadecimal string to use as a checksum.
         sum = hex(reduce(operator.xor, map(ord, nmea_str), 0))[2:].upper()
@@ -170,7 +189,7 @@ class HeartbeatClient:
             time.sleep(1.0)
 
 if __name__ == "__main__":
-
+    print("Starting server")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
         # s.sendall(b"Hello, world")
