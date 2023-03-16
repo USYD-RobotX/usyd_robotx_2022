@@ -1,0 +1,11 @@
+Bouy detect file
+
+https://github.com/USYD-RobotX/usyd_robotx_2022/blob/master/ROS/usydrx_vision/src/buoy_detector.py
+
+
+Classifier
+https://github.com/USYD-RobotX/usyd_robotx_2022/blob/master/ROS/usydrx_vision/src/object_classifier.py
+
+
+Navigate path through bouy
+https://github.com/USYD-RobotX/usyd_robotx_2022/blob/master/ROS/usydrx_missions/scripts/navigation_gate.py
